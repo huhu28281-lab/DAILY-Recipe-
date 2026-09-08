@@ -1200,45 +1200,63 @@
         { text: '물 {water}와 국간장을 넣고 중약불로 끓입니다.', timerSec: 25 * 60, showBoilNote: true },
       ],
     },
-    '두부 김치찌개': {
-      time: 25, kcal: 480, difficulty: '하', costKrw: 0,
+    '토마토 미트볼 파스타': {
+      time: 30, kcal: 650, difficulty: '중', costKrw: 8200,
+      ingredients: [
+        { name: '스파게티면', qty: 200, unit: 'g', cat: 'main', source: 'buy' },
+        { name: '다진 소고기', qty: 200, unit: 'g', cat: 'main', source: 'buy' },
+        { name: '토마토소스', qty: 300, unit: 'g', cat: 'main', source: 'buy' },
+        { name: '양파', qty: 0.5, unit: '개', cat: 'main', source: 'pantry' },
+        { name: '올리브유', qty: 1, unit: '큰술', cat: 'oil', source: 'pantry' },
+      ],
+      steps: [
+        { text: '다진 소고기를 동그랗게 빚어 미트볼을 만듭니다.' },
+        { text: '팬에 미트볼을 굽고 양파와 토마토소스를 넣어 끓입니다.', timerSec: 8 * 60 },
+        { text: '삶은 파스타면을 소스와 버무립니다.', timerSec: 10 * 60 },
+      ],
+    },
+    '닭가슴살 커리라이스': {
+      time: 25, kcal: 520, difficulty: '중', costKrw: 6800,
+      ingredients: [
+        { name: '닭가슴살', qty: 300, unit: 'g', cat: 'main', source: 'buy' },
+        { name: '카레가루', qty: 50, unit: 'g', cat: 'seasoning', source: 'buy' },
+        { name: '감자', qty: 1, unit: '개', cat: 'main', source: 'pantry' },
+        { name: '당근', qty: 0.5, unit: '개', cat: 'main', source: 'pantry' },
+        { name: '양파', qty: 0.5, unit: '개', cat: 'main', source: 'pantry' },
+      ],
+      steps: [
+        { text: '닭가슴살과 채소를 한입 크기로 썹니다.' },
+        { text: '기름에 재료를 볶다가 물을 붓고 끓입니다.', timerSec: 15 * 60 },
+        { text: '카레가루를 풀어 걸쭉해질 때까지 저어줍니다.' },
+      ],
+    },
+    '마파두부': {
+      time: 20, kcal: 420, difficulty: '중', costKrw: 4900,
       ingredients: [
         { name: '두부', qty: 1, unit: '모', cat: 'main', source: 'pantry' },
-        { name: '김치', qty: 200, unit: 'g', cat: 'main', source: 'pantry' },
-        { name: '돼지고기 앞다리살', qty: 100, unit: 'g', cat: 'main', source: 'buy' },
-        { name: '다진마늘', qty: 1, unit: '큰술', cat: 'seasoning', source: 'pantry' },
+        { name: '다진 돼지고기', qty: 100, unit: 'g', cat: 'main', source: 'buy' },
+        { name: '두반장', qty: 1, unit: '큰술', cat: 'seasoning', source: 'buy' },
+        { name: '다진마늘', qty: 1, unit: '작은술', cat: 'seasoning', source: 'pantry' },
+        { name: '대파', qty: 0.5, unit: '대', cat: 'herb', source: 'pantry' },
       ],
       steps: [
-        { text: '두부와 김치를 먹기 좋게 썹니다.' },
-        { text: '돼지고기를 볶다가 김치를 넣고 볶습니다.' },
-        { text: '물을 붓고 두부를 넣어 끓입니다.', timerSec: 15 * 60 },
+        { text: '두부를 깍둑썰기합니다.' },
+        { text: '다진 돼지고기와 두반장을 볶아 향을 냅니다.' },
+        { text: '물과 두부를 넣고 끓입니다.', timerSec: 8 * 60 },
       ],
     },
-    '닭볶음탕': {
-      time: 40, kcal: 620, difficulty: '중', costKrw: 6200,
+    '연어 스테이크 & 구운채소': {
+      time: 20, kcal: 480, difficulty: '중', costKrw: 9200,
       ingredients: [
-        { name: '닭가슴살', qty: 500, unit: 'g', cat: 'main', source: 'buy' },
-        { name: '감자', qty: 300, unit: 'g', cat: 'main', source: 'pantry' },
-        { name: '당근', qty: 100, unit: 'g', cat: 'main', source: 'pantry' },
-        { name: '고추장', qty: 2, unit: '큰술', cat: 'seasoning', source: 'pantry' },
+        { name: '연어', qty: 200, unit: 'g', cat: 'main', source: 'buy' },
+        { name: '애호박', qty: 0.5, unit: '개', cat: 'main', source: 'pantry' },
+        { name: '방울토마토', qty: 100, unit: 'g', cat: 'main', source: 'buy' },
+        { name: '올리브유', qty: 1, unit: '큰술', cat: 'oil', source: 'pantry' },
       ],
       steps: [
-        { text: '닭고기와 채소를 큼직하게 썹니다.' },
-        { text: '양념장을 만들어 재료와 함께 버무립니다.' },
-        { text: '물을 붓고 중약불로 조립니다.', timerSec: 30 * 60 },
-      ],
-    },
-    '돼지고기 두루치기': {
-      time: 35, kcal: 690, difficulty: '중', costKrw: 7400,
-      ingredients: [
-        { name: '돼지고기 앞다리살', qty: 400, unit: 'g', cat: 'main', source: 'buy' },
-        { name: '양파', qty: 1, unit: '개', cat: 'main', source: 'pantry' },
-        { name: '대파', qty: 1, unit: '대', cat: 'herb', source: 'pantry' },
-        { name: '고추장', qty: 2, unit: '큰술', cat: 'seasoning', source: 'pantry' },
-      ],
-      steps: [
-        { text: '돼지고기와 채소를 먹기 좋게 썹니다.' },
-        { text: '양념에 재운 고기를 센 불에서 볶습니다.', timerSec: 12 * 60 },
+        { text: '애호박과 방울토마토를 한입 크기로 썹니다.' },
+        { text: '팬에 연어를 노릇하게 굽습니다.', timerSec: 6 * 60 },
+        { text: '구운 채소를 곁들여 마무리합니다.' },
       ],
     },
     '고등어 조림': {
@@ -1254,41 +1272,46 @@
         { text: '양념을 끼얹어 중약불로 조립니다.', timerSec: 20 * 60 },
       ],
     },
-    '감자탕': {
-      time: 40, kcal: 710, difficulty: '중', costKrw: 8100,
+    '아보카도 토스트 & 삶은 계란': {
+      time: 10, kcal: 340, difficulty: '하', costKrw: 3200,
       ingredients: [
-        { name: '돼지고기 앞다리살', qty: 500, unit: 'g', cat: 'main', source: 'buy' },
-        { name: '감자', qty: 400, unit: 'g', cat: 'main', source: 'pantry' },
-        { name: '대파', qty: 2, unit: '대', cat: 'herb', source: 'pantry' },
-        { name: '된장', qty: 1, unit: '큰술', cat: 'seasoning', source: 'pantry' },
-      ],
-      steps: [
-        { text: '고기를 초벌로 삶아 냅니다.' },
-        { text: '감자와 양념을 넣고 끓입니다.', timerSec: 30 * 60 },
-      ],
-    },
-    '두부 계란 스크램블': {
-      time: 10, kcal: 320, difficulty: '하', costKrw: 0,
-      ingredients: [
-        { name: '두부', qty: 0.5, unit: '모', cat: 'main', source: 'pantry' },
-        { name: '계란', qty: 2, unit: '개', cat: 'main', source: 'pantry' },
-        { name: '식용유', qty: 1, unit: '작은술', cat: 'oil', source: 'pantry' },
-      ],
-      steps: [
-        { text: '두부를 으깨고 계란을 풀어 섞습니다.' },
-        { text: '팬에 기름을 두르고 약불에서 저어가며 익힙니다.', timerSec: 5 * 60 },
-      ],
-    },
-    '시금치 계란말이': {
-      time: 12, kcal: 300, difficulty: '하', costKrw: 0,
-      ingredients: [
-        { name: '시금치', qty: 50, unit: 'g', cat: 'main', source: 'pantry' },
-        { name: '계란', qty: 3, unit: '개', cat: 'main', source: 'pantry' },
+        { name: '아보카도', qty: 1, unit: '개', cat: 'main', source: 'buy' },
+        { name: '식빵', qty: 2, unit: '장', cat: 'main', source: 'buy' },
+        { name: '계란', qty: 1, unit: '개', cat: 'main', source: 'pantry' },
         { name: '소금', qty: 1, unit: '꼬집', cat: 'seasoning', source: 'pantry' },
       ],
       steps: [
-        { text: '시금치를 잘게 썰어 계란물에 섞습니다.' },
-        { text: '팬에 얇게 부어 돌돌 말아줍니다.', timerSec: 6 * 60 },
+        { text: '식빵을 노릇하게 굽습니다.' },
+        { text: '계란을 삶아 반으로 자릅니다.', timerSec: 6 * 60 },
+        { text: '아보카도를 으깨 소금으로 간해 빵 위에 올리고 계란을 곁들입니다.' },
+      ],
+    },
+    '그릭요거트 그래놀라볼': {
+      time: 5, kcal: 300, difficulty: '하', costKrw: 3400,
+      ingredients: [
+        { name: '그릭요거트', qty: 150, unit: 'g', cat: 'main', source: 'buy' },
+        { name: '그래놀라', qty: 40, unit: 'g', cat: 'main', source: 'buy' },
+        { name: '사과', qty: 0.5, unit: '개', cat: 'main', source: 'pantry' },
+        { name: '꿀', qty: 1, unit: '작은술', cat: 'seasoning', source: 'buy' },
+      ],
+      steps: [
+        { text: '그릭요거트를 그릇에 담습니다.' },
+        { text: '그래놀라와 썬 사과를 올립니다.' },
+        { text: '꿀을 살짝 뿌려 마무리합니다.' },
+      ],
+    },
+    '바나나 팬케이크': {
+      time: 15, kcal: 380, difficulty: '중', costKrw: 2600,
+      ingredients: [
+        { name: '바나나', qty: 1, unit: '개', cat: 'main', source: 'buy' },
+        { name: '팬케이크가루', qty: 100, unit: 'g', cat: 'main', source: 'buy' },
+        { name: '계란', qty: 1, unit: '개', cat: 'main', source: 'pantry' },
+        { name: '식용유', qty: 1, unit: '큰술', cat: 'oil', source: 'pantry' },
+      ],
+      steps: [
+        { text: '바나나를 으깨 반죽에 섞습니다.' },
+        { text: '팬에 기름을 두르고 한 국자씩 부칩니다.', timerSec: 3 * 60 },
+        { text: '노릇해지면 뒤집어 마저 굽습니다.' },
       ],
     },
     '감자 계란찜': {
@@ -1303,52 +1326,41 @@
         { text: '계란물과 섞어 찜기에 찝니다.', timerSec: 12 * 60 },
       ],
     },
-    '사과 오트밀': {
-      time: 8, kcal: 290, difficulty: '하', costKrw: 2400,
+    '사과 시나몬 오트밀': {
+      time: 8, kcal: 290, difficulty: '하', costKrw: 2600,
       ingredients: [
         { name: '사과', qty: 1, unit: '개', cat: 'main', source: 'pantry' },
         { name: '오트밀', qty: 40, unit: 'g', cat: 'main', source: 'buy' },
         { name: '우유', qty: 200, unit: 'ml', cat: 'broth', source: 'buy' },
+        { name: '시나몬가루', qty: 1, unit: '꼬집', cat: 'seasoning', source: 'buy' },
       ],
       steps: [
         { text: '오트밀에 우유를 붓고 전자레인지에 데웁니다.', timerSec: 3 * 60 },
-        { text: '사과를 잘게 썰어 위에 올립니다.' },
-      ],
-    },
-    '당근 계란볶음밥': {
-      time: 15, kcal: 410, difficulty: '중', costKrw: 3100,
-      ingredients: [
-        { name: '당근', qty: 50, unit: 'g', cat: 'main', source: 'pantry' },
-        { name: '계란', qty: 2, unit: '개', cat: 'main', source: 'pantry' },
-        { name: '밥', qty: 200, unit: 'g', cat: 'main', source: 'pantry' },
-        { name: '식용유', qty: 1, unit: '큰술', cat: 'oil', source: 'pantry' },
-      ],
-      steps: [
-        { text: '당근을 잘게 다집니다.' },
-        { text: '팬에 기름을 두르고 밥과 당근, 계란을 볶습니다.', timerSec: 8 * 60 },
+        { text: '썬 사과와 시나몬 가루를 올립니다.' },
       ],
     },
   };
 
   const candidateNames = {
-    breakfast: ['두부 계란 스크램블', '시금치 계란말이', '감자 계란찜', '사과 오트밀', '당근 계란볶음밥'],
-    dinner: ['두부 김치찌개', '닭볶음탕', '돼지고기 두루치기', '고등어 조림', '감자탕'],
+    breakfast: ['아보카도 토스트 & 삶은 계란', '그릭요거트 그래놀라볼', '바나나 팬케이크', '사과 시나몬 오트밀', '감자 계란찜'],
+    dinner: ['토마토 미트볼 파스타', '닭가슴살 커리라이스', '마파두부', '연어 스테이크 & 구운채소', '고등어 조림'],
   };
 
   const currentMealName = { breakfast: '계란 야채죽 & 사과 슬라이스', dinner: '소고기 뭇국 & 삼겹살 구이' };
 
   // 명세 §4.3: 월~일 아침 7 + 저녁 7 = 14끼니. 이 목업엔 서로 다른 요리가 6종류뿐이라(기본 2 + Swap 후보 10)
   // 일요일은 불가피하게 월요일과 겹친다 — 실제 서비스라면 재료 500종 기준으로 14개 전부 다르게 나온다.
+  // 한식에만 치우치지 않도록 파스타·커리·마파두부·연어 스테이크 등 다양한 나라의 메뉴를 섞었다.
   const HOUSEHOLD_SIZE = 3;
   const DAILY_TARGET_KCAL_HOUSEHOLD = 4200; // §2.1 참조 케이스: 아침+저녁 관리 대상 합계
   const weeklyPlan = {
     mon: { breakfast: '계란 야채죽 & 사과 슬라이스', dinner: '소고기 뭇국 & 삼겹살 구이' },
-    tue: { breakfast: '두부 계란 스크램블', dinner: '두부 김치찌개' },
-    wed: { breakfast: '시금치 계란말이', dinner: '닭볶음탕' },
-    thu: { breakfast: '감자 계란찜', dinner: '돼지고기 두루치기' },
-    fri: { breakfast: '사과 오트밀', dinner: '고등어 조림' },
-    sat: { breakfast: '당근 계란볶음밥', dinner: '감자탕' },
-    sun: { breakfast: '계란 야채죽 & 사과 슬라이스', dinner: '소고기 뭇국 & 삼겹살 구이' },
+    tue: { breakfast: '아보카도 토스트 & 삶은 계란', dinner: '토마토 미트볼 파스타' },
+    wed: { breakfast: '그릭요거트 그래놀라볼', dinner: '닭가슴살 커리라이스' },
+    thu: { breakfast: '사과 시나몬 오트밀', dinner: '마파두부' },
+    fri: { breakfast: '바나나 팬케이크', dinner: '연어 스테이크 & 구운채소' },
+    sat: { breakfast: '감자 계란찜', dinner: '고등어 조림' },
+    sun: { breakfast: '아보카도 토스트 & 삶은 계란', dinner: '토마토 미트볼 파스타' },
   };
   let activeDay = 'mon';
 
