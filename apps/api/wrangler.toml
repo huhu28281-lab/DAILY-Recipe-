@@ -1,4 +1,4 @@
-name = "smart-meal-planner-api"
+name = "daily-recipe-api"
 main = "src/index.ts"
 compatibility_date = "2026-09-01"
 compatibility_flags = ["nodejs_compat"]
