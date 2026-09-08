@@ -878,7 +878,7 @@
           <!-- 탭1: 식단 캘린더(홈) -->
           <section role="tabpanel" id="panel-home" class="is-active" aria-labelledby="tab-home">
             <div class="top-row">
-              <h2 class="h1">2026년 9월 2주차</h2>
+              <h2 class="h1" id="week-title">2026년 9월 2주차</h2>
               <div class="icon-btn" aria-hidden="true">⚙︎</div>
             </div>
 
@@ -1390,10 +1390,37 @@
     updateNutritionSummary();
   }
 
+  // 이번 주 월~일을 실제 오늘 날짜 기준으로 계산해서 채운다 — 서버 배치 없이,
+  // 열 때마다 "이번 주"가 자동으로 맞춰지는 방식이라 매주 손댈 필요가 없다.
+  const DAY_KEYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+
+  function renderCurrentWeek() {
+    const now = new Date();
+    const mondayOffset = (now.getDay() + 6) % 7; // 월=0 ... 일=6
+    const monday = new Date(now);
+    monday.setDate(now.getDate() - mondayOffset);
+
+    const firstOfMonth = new Date(monday.getFullYear(), monday.getMonth(), 1);
+    const firstMondayOffset = (firstOfMonth.getDay() + 6) % 7;
+    const weekOfMonth = Math.ceil((monday.getDate() + firstMondayOffset) / 7);
+
+    document.getElementById('week-title').textContent =
+      `${monday.getFullYear()}년 ${monday.getMonth() + 1}월 ${weekOfMonth}주차`;
+
+    DAY_KEYS.forEach((key, i) => {
+      const date = new Date(monday);
+      date.setDate(monday.getDate() + i);
+      const btn = document.querySelector(`#week-strip .day[data-day="${key}"]`);
+      btn.querySelector('.date').textContent = String(date.getDate()).padStart(2, '0');
+    });
+
+    selectDay(DAY_KEYS[mondayOffset]); // 오늘 요일을 기본 선택 상태로
+  }
+
   document.querySelectorAll('#week-strip .day').forEach((btn) => {
     btn.addEventListener('click', () => selectDay(btn.dataset.day));
   });
-  updateNutritionSummary();
+  renderCurrentWeek();
 
   // ---------- Swap 바텀시트 (§4.5: 후보 5개를 비용과 함께 제시한다) ----------
   const backdrop = document.getElementById('sheet-backdrop');
