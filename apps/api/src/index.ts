@@ -22,7 +22,7 @@ const app = new Hono<{ Bindings: Bindings }>();
 // 브라우저에서 루트로 그냥 들어왔을 때 밋밋한 404 대신 이게 뭔지 알려준다 — 이 서버는 화면이 없는 API다.
 app.get("/", (c) =>
   c.json({
-    name: "Smart Meal Planner API",
+    name: "Daily Recipe API",
     status: "ok",
     docs: "이 서버는 화면이 없는 API 서버입니다. 상태 확인은 /health를 호출하세요.",
   }),
