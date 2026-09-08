@@ -10,22 +10,23 @@ PRICE_REFERENCE_SOURCE = "KAMIS"
 SWAP_WEEKLY_LIMIT = "20"
 
 # --- D1: 재료 마스터 / 알레르기 마스터 / 영양성분 / 가격 참조 / 주간 식단 이력 ---
-# 실제 database_id는 `wrangler d1 create smart-meal-planner-db` 실행 후 채운다.
 [[d1_databases]]
 binding = "DB"
 database_name = "smart-meal-planner-db"
-database_id = "REPLACE_WITH_D1_DATABASE_ID"
+database_id = "8d6250ac-95c1-4597-bfc8-c02812a6b6f0"
 migrations_dir = "src/db/migrations"
 
 # --- KV: 생성 파이프라인 캐시(제철 재료, 가격 배치 스냅샷 등) ---
-[[kv_namespaces]]
-binding = "CACHE_KV"
-id = "REPLACE_WITH_KV_NAMESPACE_ID"
+# 아직 이 캐시를 실제로 읽고 쓰는 코드가 없어서(§5 pipeline 스텁 단계) 바인딩을 비워둔다.
+# 캐시 로직을 구현할 때 `wrangler kv namespace create CACHE_KV`로 만들고 여기 다시 채운다.
+# [[kv_namespaces]]
+# binding = "CACHE_KV"
+# id = ""
 
 # --- Cron: KAMIS/aT 가격 DB 주 1회 배치 갱신 (§2.4) ---
 # 매주 일요일 04:00 UTC = 월요일 13:00 KST
 [triggers]
-crons = ["0 4 * * 0"]
+crons = ["0 4 * * SUN"]
 
 # --- 시크릿은 여기 두지 않는다 ---
 # wrangler secret put LLM_API_KEY

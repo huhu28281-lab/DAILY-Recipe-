@@ -8,7 +8,7 @@ import report from "./routes/report";
 
 export type Bindings = {
   DB: D1Database;
-  CACHE_KV: KVNamespace;
+  // CACHE_KV: 아직 wrangler.toml에 바인딩되어 있지 않다 (사용하는 코드가 생기면 함께 추가).
   ENVIRONMENT: string;
   PRICE_REFERENCE_SOURCE: string;
   SWAP_WEEKLY_LIMIT: string;
