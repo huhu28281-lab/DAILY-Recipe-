@@ -1,0 +1,2025 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Daily Recipe</title>
+<style>
+  :root {
+    --color-primary-500: #2D6A4F;
+    --color-primary-100: #D8F3DC;
+    --color-bg-base: #F9FAF8;
+    --color-surface: #FFFFFF;
+    --color-text-main: #1E2421;
+    --color-text-sub: #6C757D;
+    --color-border: #E5E9E5;
+
+    --color-status-good-bg: #38B000;
+    --color-status-warn-bg: #FFB703;
+    --color-status-danger-bg: #E63946;
+    --color-status-good-text: #1B7F3B;
+    --color-status-warn-text: #8A5A00;
+    --color-status-danger-text: #C1121F;
+
+    --color-owned-bg: #2A9D8F;
+    --color-owned-text: #1D7A70;
+    --color-buy-bg: #E76F51;
+    --color-buy-text: #B23A20;
+    --color-seasonal-bg: #F4A261;
+    --color-seasonal-text: #8A5A00;
+
+    --color-meal-morning: #F4A261;
+    --color-meal-evening: #E76F51;
+
+    --stage-bg: #EEF1EC;
+    --shadow-color: rgba(30, 36, 32, 0.16);
+
+    --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Malgun Gothic", sans-serif;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --color-bg-base: #121614;
+      --color-surface: #1E2522;
+      --color-text-main: #E8ECE9;
+      --color-text-sub: #A3ADA7;
+      --color-border: #2B332E;
+      --color-primary-500: #40916C;
+      --color-primary-100: #1C3B2C;
+
+      --color-status-good-text: #5FD97F;
+      --color-status-warn-text: #FFC94D;
+      --color-status-danger-text: #FF6B75;
+
+      --color-owned-text: #4FC9BA;
+      --color-buy-text: #FF8F6E;
+
+      --stage-bg: #0B0D0C;
+      --shadow-color: rgba(0, 0, 0, 0.55);
+    }
+  }
+  :root[data-theme="dark"] {
+    --color-bg-base: #121614;
+    --color-surface: #1E2522;
+    --color-text-main: #E8ECE9;
+    --color-text-sub: #A3ADA7;
+    --color-border: #2B332E;
+    --color-primary-500: #40916C;
+    --color-primary-100: #1C3B2C;
+
+    --color-status-good-text: #5FD97F;
+    --color-status-warn-text: #FFC94D;
+    --color-status-danger-text: #FF6B75;
+
+    --color-owned-text: #4FC9BA;
+    --color-buy-text: #FF8F6E;
+
+    --stage-bg: #0B0D0C;
+    --shadow-color: rgba(0, 0, 0, 0.55);
+  }
+
+  * { box-sizing: border-box; }
+  button { font-family: inherit; cursor: pointer; }
+
+  body {
+    background: var(--stage-bg);
+    color: var(--color-text-main);
+    font-family: var(--font-family);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .stage {
+    min-height: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 32px 16px 48px;
+  }
+
+  .intro {
+    max-width: 400px;
+    margin: 0 auto 20px;
+    text-align: center;
+  }
+  .intro .eyebrow {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-primary-500);
+  }
+  .intro h1 {
+    font-size: 22px;
+    line-height: 30px;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+    margin: 6px 0 4px;
+    text-wrap: balance;
+  }
+  .intro p {
+    font-size: 13px;
+    color: var(--color-text-sub);
+    margin: 0;
+  }
+  .intro .tagline { font-size: 14px; font-weight: 500; margin-top: 2px; }
+
+  /* 보글이(냄비 캐릭터) 공통 스타일 — 얼굴 부위 클래스는 어느 크기에서 재사용해도 같게 그려진다. */
+  .eye { fill: var(--color-text-main); }
+  .smile { stroke: var(--color-text-main); }
+  .steam { transform-origin: center; }
+  @media (prefers-reduced-motion: no-preference) {
+    .steam-1 { animation: steamRise 2.6s ease-in-out infinite; }
+    .steam-2 { animation: steamRise 2.6s ease-in-out infinite 0.5s; }
+    .steam-3 { animation: steamRise 2.6s ease-in-out infinite 1s; }
+  }
+  @keyframes steamRise {
+    0% { transform: translateY(5px); opacity: 0; }
+    35% { opacity: 0.65; }
+    100% { transform: translateY(-9px); opacity: 0; }
+  }
+
+  .mascot-hero { width: 112px; height: 112px; margin: 0 auto 6px; display: block; }
+  .mini-mascot { width: 44px; height: 44px; margin: 0 auto 8px; display: block; }
+  .recipe-mascot { width: 40px; height: 40px; flex-shrink: 0; }
+  .recipe-mascot-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .recipe-mascot-row .bubble {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-primary-500);
+    background: var(--color-primary-100);
+    padding: 7px 12px;
+    border-radius: 999px;
+  }
+
+  .device-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .phone {
+    width: min(390px, 100%);
+    background: var(--color-bg-base);
+    border-radius: 36px;
+    box-shadow: 0 24px 48px -12px var(--shadow-color), 0 0 0 8px var(--color-surface), 0 0 0 9px var(--color-border);
+    overflow: hidden;
+    position: relative;
+  }
+
+  .notch {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 84px;
+    height: 20px;
+    background: var(--color-border);
+    border-radius: 999px;
+    opacity: 0.6;
+    z-index: 5;
+  }
+
+  .screen {
+    height: 780px;
+    display: flex;
+    flex-direction: column;
+    padding-top: 34px;
+  }
+
+  .panel {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 16px 24px;
+  }
+  .panel::-webkit-scrollbar { width: 0; height: 0; }
+
+  [role="tabpanel"] { display: none; }
+  [role="tabpanel"].is-active { display: block; }
+
+  /* ---------- 공통 텍스트 스케일 ---------- */
+  h2.h1 { font-size: 22px; line-height: 30px; font-weight: 700; letter-spacing: -0.2px; margin: 0; text-wrap: balance; }
+  h3.h2 { font-size: 18px; line-height: 26px; font-weight: 600; letter-spacing: -0.2px; margin: 0 0 12px; }
+  .body-l { font-size: 16px; line-height: 24px; }
+  .body-m { font-size: 14px; line-height: 20px; }
+  .caption { font-size: 13px; line-height: 18px; font-weight: 500; }
+  .sub { color: var(--color-text-sub); }
+  .num { font-variant-numeric: tabular-nums; }
+
+  /* ---------- 헤더 ---------- */
+  .top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .icon-btn {
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
+    border-radius: 12px;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    color: var(--color-text-sub);
+    font-size: 15px;
+  }
+  .icon-btn:focus-visible, .chip:focus-visible, .cta:focus-visible, .tab-btn:focus-visible, .day:focus-visible {
+    outline: 2px solid var(--color-primary-500);
+    outline-offset: 2px;
+  }
+
+  /* ---------- 주간 캘린더 스트립 ---------- */
+  .week-strip {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 16px;
+    padding: 10px 6px;
+    margin-bottom: 24px;
+  }
+  .day {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 0;
+    border-radius: 12px;
+    width: 100%;
+    border: none;
+    background: transparent;
+  }
+  .day .dow { font-size: 11px; color: var(--color-text-sub); }
+  .day .date { font-size: 14px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .day.is-active { background: var(--color-primary-100); }
+  .day.is-active .dow, .day.is-active .date { color: var(--color-primary-500); }
+
+  /* ---------- 끼니 카드 ---------- */
+  .meal-block { margin-bottom: 20px; }
+  .meal-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  .meal-label .name {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .swap-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    color: var(--color-primary-500);
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .meal-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-left: 4px solid var(--meal-accent, var(--color-primary-500));
+    border-radius: 16px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .meal-card.morning { --meal-accent: var(--color-meal-morning); }
+  .meal-card.evening { --meal-accent: var(--color-meal-evening); }
+
+  .menu-name { font-size: 16px; line-height: 24px; font-weight: 700; letter-spacing: -0.2px; text-wrap: balance; }
+
+  .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 10px;
+    font-size: 13px;
+    color: var(--color-text-sub);
+  }
+  .dot::before { content: "·"; margin-right: 8px; color: var(--color-border); }
+  .dot:first-child::before { content: none; margin: 0; }
+
+  .badge-row { display: flex; align-items: center; }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .badge.owned { background: var(--color-owned-bg); color: white; }
+  .badge.buy { background: color-mix(in srgb, var(--color-buy-bg) 16%, transparent); color: var(--color-buy-text); }
+
+  /* ---------- 오늘의 영양 ---------- */
+  .nutrition-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 20px;
+  }
+  .nutrition-card .title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 10px;
+  }
+  .segbar { display: flex; gap: 3px; margin-bottom: 8px; }
+  .segbar .seg { flex: 1; height: 8px; border-radius: 4px; background: var(--color-border); }
+  .segbar .seg.filled { background: var(--color-primary-500); }
+  .nutrition-card .value-row { display: flex; justify-content: space-between; font-size: 13px; color: var(--color-text-sub); }
+  .nutrition-card .value-row strong { color: var(--color-text-main); font-variant-numeric: tabular-nums; }
+
+  .cta {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 14px 16px;
+    border-radius: 12px;
+    background: var(--color-primary-500);
+    color: white;
+    font-size: 15px;
+    font-weight: 700;
+    border: none;
+  }
+
+  /* ---------- 리포트 탭 ---------- */
+  .segmented {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: var(--color-primary-100);
+    border-radius: 12px;
+    padding: 4px;
+    margin-bottom: 20px;
+    gap: 4px;
+  }
+  .segmented button {
+    border: none;
+    background: transparent;
+    padding: 9px 0;
+    border-radius: 9px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-primary-500);
+  }
+  .segmented button.is-active { background: var(--color-surface); color: var(--color-text-main); box-shadow: 0 1px 2px var(--shadow-color); }
+
+  .cost-hero {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 16px;
+    padding: 18px 16px;
+    margin-bottom: 16px;
+  }
+  .cost-hero .label { font-size: 13px; color: var(--color-text-sub); margin-bottom: 4px; }
+  .cost-hero .amount { font-size: 28px; line-height: 36px; font-weight: 700; letter-spacing: -0.2px; font-variant-numeric: tabular-nums; }
+  .cost-hero .note { font-size: 13px; color: var(--color-owned-text); margin-top: 6px; }
+
+  .list-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin: 20px 0 10px;
+  }
+  .list-title h3 { font-size: 14px; font-weight: 700; margin: 0; }
+  .list-title span { font-size: 12px; color: var(--color-text-sub); }
+
+  .grocery-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--color-border);
+    font-size: 14px;
+  }
+  .grocery-row:last-child { border-bottom: none; }
+  .grocery-row .check { width: 18px; height: 18px; border-radius: 5px; border: 1.5px solid var(--color-border); flex-shrink: 0; }
+  .grocery-row .item-name { flex: 1; }
+  .grocery-row .price { font-variant-numeric: tabular-nums; font-weight: 600; }
+  .grocery-row .price.unpriced { color: var(--color-text-sub); font-weight: 500; font-size: 13px; }
+
+  .notice {
+    display: flex;
+    gap: 8px;
+    font-size: 12px;
+    line-height: 18px;
+    color: var(--color-text-sub);
+    padding: 10px 0;
+  }
+  .notice span.mark { flex-shrink: 0; }
+
+  .nutri-row { margin-bottom: 14px; }
+  .nutri-row .label-line { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px; }
+  .nutri-row .label-line .name { font-weight: 600; }
+  .nutri-row .label-line .target { color: var(--color-text-sub); }
+
+  .disclaimer {
+    margin-top: 20px;
+    padding: 12px;
+    background: var(--color-primary-100);
+    border-radius: 12px;
+    font-size: 12px;
+    line-height: 18px;
+    color: var(--color-status-good-text);
+  }
+
+  /* ---------- 식재료 탭 ---------- */
+  .pantry-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .pantry-item:last-child { border-bottom: none; }
+  .pantry-thumb {
+    width: 44px; height: 44px; border-radius: 12px;
+    display: grid; place-items: center;
+    background: var(--color-primary-100);
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .pantry-thumb-img {
+    width: 44px; height: 44px; border-radius: 12px;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+  .pantry-info { flex: 1; min-width: 0; }
+  .pantry-info .name { font-size: 14px; font-weight: 600; }
+  .pantry-info .meta { font-size: 12px; color: var(--color-text-sub); }
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+  .tag.priority { background: color-mix(in srgb, var(--color-status-danger-bg) 14%, transparent); color: var(--color-status-danger-text); }
+  .tag.staple { background: var(--color-border); color: var(--color-text-sub); }
+  .tag.seasonal { background: color-mix(in srgb, var(--color-seasonal-bg) 20%, transparent); color: var(--color-seasonal-text); }
+
+  .section-gap { margin-top: 28px; }
+
+  .qty-stepper { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+  .mini-step {
+    width: 26px; height: 26px; border-radius: 999px;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    color: var(--color-text-sub);
+    font-size: 14px; font-weight: 700;
+    display: grid; place-items: center;
+  }
+  .mini-step:hover { border-color: var(--color-primary-500); color: var(--color-primary-500); }
+  .qty-value { font-weight: 600; }
+
+  .add-inline-btn {
+    flex-shrink: 0;
+    padding: 7px 12px;
+    border-radius: 999px;
+    border: 1.5px solid var(--color-primary-500);
+    background: transparent;
+    color: var(--color-primary-500);
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .add-inline-btn:hover { background: var(--color-primary-100); }
+  .add-inline-btn:disabled { opacity: 0.5; cursor: default; background: transparent; }
+
+  .empty-row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 13px;
+    color: var(--color-text-sub);
+    padding: 22px 0;
+    text-align: center;
+  }
+
+  .ingredient-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 4px 0 8px; }
+  .ing-chip {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 12px 4px;
+    border-radius: 14px;
+    border: 1.5px solid var(--color-border);
+    background: var(--color-bg-base);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--color-text-main);
+  }
+  .ing-chip .emoji { font-size: 22px; }
+  .ing-chip.is-selected { border-color: var(--color-primary-500); background: var(--color-primary-100); color: var(--color-primary-500); }
+  @media (prefers-reduced-motion: no-preference) {
+    .ing-chip { transition: transform 150ms ease-out, background 150ms ease-out, border-color 150ms ease-out; }
+    .ing-chip:active { transform: scale(0.95); }
+  }
+  .sheet-hint { font-size: 12px; color: var(--color-text-sub); padding: 0 0 12px; }
+
+  .text-input {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid var(--color-border);
+    background: var(--color-bg-base);
+    color: var(--color-text-main);
+    font-size: 14px;
+    font-family: inherit;
+  }
+  .text-input:focus { outline: 2px solid var(--color-primary-500); outline-offset: 1px; }
+  select.text-input { appearance: auto; }
+
+  .custom-ing-form { display: flex; gap: 8px; margin-top: 4px; align-items: center; }
+  .custom-ing-form .text-input { flex: 1; }
+  .custom-ing-form .add-inline-btn { white-space: nowrap; }
+
+  .photo-picker {
+    width: 40px; height: 40px; border-radius: 12px;
+    border: 1.5px dashed var(--color-border);
+    background: var(--color-bg-base);
+    font-size: 17px;
+    display: grid; place-items: center;
+    flex-shrink: 0;
+    overflow: hidden;
+    padding: 0;
+  }
+  .photo-picker img { width: 100%; height: 100%; object-fit: cover; }
+
+  .form-group { margin-bottom: 14px; }
+  .form-label { display: block; font-size: 12px; font-weight: 600; color: var(--color-text-sub); margin-bottom: 6px; }
+
+  /* ---------- 가족 탭 ---------- */
+  .member-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 16px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+  }
+  .member-card .head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .member-card .who { display: flex; align-items: center; gap: 8px; }
+  .avatar {
+    width: 36px; height: 36px; border-radius: 999px;
+    background: var(--color-primary-100); color: var(--color-primary-500);
+    display: grid; place-items: center; font-weight: 700; font-size: 14px;
+    flex-shrink: 0;
+  }
+  .member-card .kcal { font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .member-card .head-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+  .member-card .sub-row { display: flex; gap: 6px; flex-wrap: wrap; }
+  .chip {
+    padding: 4px 9px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    background: var(--color-bg-base);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-sub);
+  }
+  .chip.allergy { background: color-mix(in srgb, var(--color-status-danger-bg) 12%, transparent); color: var(--color-status-danger-text); border-color: transparent; }
+  .warn-note {
+    display: flex;
+    gap: 8px;
+    font-size: 12px;
+    line-height: 17px;
+    color: var(--color-status-warn-text);
+    background: color-mix(in srgb, var(--color-status-warn-bg) 14%, transparent);
+    padding: 10px 12px;
+    border-radius: 10px;
+    margin-top: 8px;
+  }
+  .consent-note {
+    margin-top: 20px;
+    font-size: 12px;
+    line-height: 18px;
+    color: var(--color-text-sub);
+  }
+  .consent-note strong { color: var(--color-text-main); }
+
+  /* ---------- 하단 탭바 ---------- */
+  .tabbar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-top: 1px solid var(--color-border);
+    background: var(--color-surface);
+  }
+  .tab-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 10px 0 12px;
+    background: transparent;
+    border: none;
+    color: var(--color-text-sub);
+    font-size: 11px;
+    font-weight: 600;
+    min-height: 48px;
+  }
+  .tab-btn .ico { font-size: 18px; }
+  .tab-btn.is-active { color: var(--color-primary-500); }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .tab-btn { transition: color 150ms ease-out; }
+    .tab-btn:active .ico { transform: scale(0.95); display: inline-block; }
+  }
+
+  /* ---------- Swap 바텀시트 (§4.5) ---------- */
+  .sheet-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 20;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .sheet-backdrop.is-open { opacity: 1; pointer-events: auto; }
+
+  .sheet {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    max-height: 82%;
+    background: var(--color-surface);
+    border-radius: 24px 24px 0 0;
+    box-shadow: 0 -12px 32px var(--shadow-color);
+    z-index: 21;
+    transform: translateY(100%);
+    display: flex;
+    flex-direction: column;
+  }
+  .sheet.is-open { transform: translateY(0); }
+  @media (prefers-reduced-motion: no-preference) {
+    .sheet-backdrop, .sheet { transition: transform 220ms ease-out, opacity 220ms ease-out; }
+  }
+
+  .sheet-handle { display: flex; justify-content: center; padding: 10px 0 4px; flex-shrink: 0; }
+  .sheet-handle span { width: 36px; height: 4px; border-radius: 999px; background: var(--color-border); }
+
+  .sheet-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 20px 12px;
+    flex-shrink: 0;
+  }
+  .sheet-head h3 { font-size: 16px; font-weight: 700; margin: 0; }
+  .sheet-close {
+    width: 32px; height: 32px; border-radius: 999px;
+    border: none; background: var(--color-bg-base);
+    color: var(--color-text-sub); font-size: 15px;
+  }
+
+  .sheet-body { overflow-y: auto; padding: 4px 16px 20px; display: flex; flex-direction: column; gap: 10px; }
+
+  .candidate-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    border: 1px solid var(--color-border);
+    border-radius: 16px;
+    padding: 12px 14px;
+    background: var(--color-bg-base);
+  }
+  .candidate-info .name { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+  .candidate-info .meta { display: flex; flex-wrap: wrap; gap: 4px 8px; font-size: 12px; color: var(--color-text-sub); align-items: center; }
+  .candidate-info .meta .badge { padding: 3px 8px; font-size: 11px; }
+  .pick-btn {
+    flex-shrink: 0;
+    padding: 8px 14px;
+    border-radius: 999px;
+    border: 1.5px solid var(--color-primary-500);
+    background: transparent;
+    color: var(--color-primary-500);
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .pick-btn:hover { background: var(--color-primary-100); }
+
+  .toast {
+    position: absolute;
+    left: 50%;
+    bottom: 76px;
+    transform: translate(-50%, 12px);
+    background: var(--color-text-main);
+    color: var(--color-bg-base);
+    padding: 10px 16px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    z-index: 30;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .toast.is-open { opacity: 1; transform: translate(-50%, 0); }
+  @media (prefers-reduced-motion: no-preference) {
+    .toast { transition: opacity 200ms ease-out, transform 200ms ease-out; }
+  }
+
+  .meal-card { cursor: pointer; }
+  .meal-card:focus-visible { outline: 2px solid var(--color-primary-500); outline-offset: 2px; }
+  .tap-hint { font-size: 12px; color: var(--color-text-sub); margin-top: 2px; }
+
+  /* ---------- 레시피 화면 (§4.6, §10) ---------- */
+  .recipe-screen {
+    position: absolute;
+    inset: 0;
+    background: var(--color-bg-base);
+    z-index: 22;
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+  }
+  .recipe-screen.is-open { transform: translateX(0); }
+  @media (prefers-reduced-motion: no-preference) {
+    .recipe-screen { transition: transform 240ms ease-out; }
+  }
+
+  .recipe-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 34px 16px 12px;
+    flex-shrink: 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .recipe-title { font-size: 16px; font-weight: 700; text-align: center; flex: 1; padding: 0 8px; }
+  .recipe-body { flex: 1; overflow-y: auto; padding: 16px; }
+  .recipe-body::-webkit-scrollbar { width: 0; }
+
+  .recipe-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 10px;
+    font-size: 13px;
+    color: var(--color-text-sub);
+    margin-bottom: 8px;
+  }
+  .recipe-cost { margin-bottom: 20px; }
+
+  .servings-control {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 14px;
+    padding: 12px;
+    margin-bottom: 8px;
+  }
+  .stepper-btn {
+    width: 40px; height: 40px; border-radius: 999px;
+    border: 1.5px solid var(--color-primary-500);
+    background: var(--color-surface);
+    color: var(--color-primary-500);
+    font-size: 18px; font-weight: 700;
+  }
+  .stepper-btn:disabled { opacity: 0.35; border-color: var(--color-border); color: var(--color-text-sub); }
+  .servings-value { font-size: 16px; font-weight: 700; min-width: 64px; text-align: center; font-variant-numeric: tabular-nums; }
+
+  .scale-note {
+    display: flex; gap: 6px;
+    font-size: 12px; color: var(--color-text-sub);
+    margin-bottom: 20px;
+  }
+
+  .ingredient-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 0;
+    border-bottom: 1px solid var(--color-border);
+    font-size: 14px;
+  }
+  .ingredient-row:last-child { border-bottom: none; }
+  .ingredient-row .ing-status { flex-shrink: 0; width: 18px; text-align: center; }
+  .ingredient-row .ing-status.buy { color: var(--color-buy-text); }
+  .ingredient-row .ing-status.pantry { color: var(--color-owned-text); }
+  .ingredient-row .ing-name { flex: 1; }
+  .ingredient-row .ing-qty { font-variant-numeric: tabular-nums; font-weight: 600; }
+  .ingredient-row .ing-tag { font-size: 11px; color: var(--color-text-sub); margin-left: 6px; }
+
+  .steps-title { margin: 24px 0 12px; }
+  .step-item { display: flex; gap: 10px; margin-bottom: 16px; }
+  .step-num {
+    width: 24px; height: 24px; border-radius: 999px;
+    background: var(--color-primary-100); color: var(--color-primary-500);
+    display: grid; place-items: center; font-size: 12px; font-weight: 700;
+    flex-shrink: 0;
+  }
+  .step-text { font-size: 14px; line-height: 21px; }
+  .timer-chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    margin-top: 8px;
+    padding: 7px 12px;
+    border-radius: 999px;
+    border: 1.5px solid var(--color-primary-500);
+    background: var(--color-primary-100);
+    color: var(--color-primary-500);
+    font-size: 13px; font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  .timer-chip.is-running { background: var(--color-primary-500); color: white; }
+  .step-note { font-size: 12px; color: var(--color-text-sub); margin-top: 6px; }
+</style>
+</head>
+<body>
+
+<div class="stage">
+  <div class="device-col">
+    <div class="intro">
+      <svg class="mascot-hero" viewBox="0 0 140 140" role="img" aria-label="냄비 캐릭터 보글이">
+        <path class="steam steam-1" d="M50,38 Q45,28 50,20 Q55,12 50,4" stroke="var(--color-text-sub)" stroke-width="3.5" stroke-linecap="round" fill="none" opacity="0.55"/>
+        <path class="steam steam-2" d="M70,34 Q65,22 70,14 Q75,6 70,-2" stroke="var(--color-text-sub)" stroke-width="3.5" stroke-linecap="round" fill="none" opacity="0.6"/>
+        <path class="steam steam-3" d="M90,38 Q85,28 90,20 Q95,12 90,4" stroke="var(--color-text-sub)" stroke-width="3.5" stroke-linecap="round" fill="none" opacity="0.55"/>
+        <rect x="6" y="74" width="18" height="11" rx="5.5" fill="var(--color-primary-500)"/>
+        <rect x="116" y="74" width="18" height="11" rx="5.5" fill="var(--color-primary-500)"/>
+        <ellipse cx="70" cy="52" rx="42" ry="11" transform="rotate(-4 70 52)" fill="var(--color-meal-evening)"/>
+        <rect x="83" y="36" width="8" height="8" rx="2" transform="rotate(-4 87 40)" fill="var(--color-meal-evening)"/>
+        <rect x="22" y="66" width="96" height="58" rx="26" fill="var(--color-primary-500)"/>
+        <circle class="eye" cx="54" cy="93" r="4.2"/>
+        <circle class="eye" cx="86" cy="93" r="4.2"/>
+        <ellipse cx="45" cy="101" rx="5.5" ry="3.2" fill="var(--color-meal-evening)" opacity="0.55"/>
+        <ellipse cx="95" cy="101" rx="5.5" ry="3.2" fill="var(--color-meal-evening)" opacity="0.55"/>
+        <path class="smile" d="M57,102 Q70,111 83,102" stroke-width="3.4" fill="none" stroke-linecap="round"/>
+      </svg>
+      <div class="eyebrow">Daily Recipe · v1.2.0</div>
+      <h1>🥗 Daily Recipe</h1>
+      <p class="tagline">오늘 뭐 먹지 고민은 보글이한테 맡겨요</p>
+    </div>
+
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="screen">
+        <div class="panel">
+
+          <!-- 탭1: 식단 캘린더(홈) -->
+          <section role="tabpanel" id="panel-home" class="is-active" aria-labelledby="tab-home">
+            <div class="top-row">
+              <h2 class="h1">2026년 9월 2주차</h2>
+              <div class="icon-btn" aria-hidden="true">⚙︎</div>
+            </div>
+
+            <div class="week-strip" id="week-strip">
+              <button class="day is-active" data-day="mon"><span class="dow">월</span><span class="date num">07</span></button>
+              <button class="day" data-day="tue"><span class="dow">화</span><span class="date num">08</span></button>
+              <button class="day" data-day="wed"><span class="dow">수</span><span class="date num">09</span></button>
+              <button class="day" data-day="thu"><span class="dow">목</span><span class="date num">10</span></button>
+              <button class="day" data-day="fri"><span class="dow">금</span><span class="date num">11</span></button>
+              <button class="day" data-day="sat"><span class="dow">토</span><span class="date num">12</span></button>
+              <button class="day" data-day="sun"><span class="dow">일</span><span class="date num">13</span></button>
+            </div>
+
+            <div class="meal-block">
+              <div class="meal-label">
+                <span class="name">🌅 아침</span>
+                <button class="swap-btn" data-swap="breakfast">🔄 변경</button>
+              </div>
+              <div class="meal-card morning" id="card-breakfast" role="button" tabindex="0">
+                <div class="menu-name">계란 야채죽 &amp; 사과 슬라이스</div>
+                <div class="meta-row">
+                  <span class="dot time">⏱ 15분</span>
+                  <span class="dot num">380 kcal/1인분</span>
+                  <span class="dot">난이도 하</span>
+                </div>
+                <div class="badge-row">
+                  <span class="badge owned">✓ 집에 있는 재료로 100%</span>
+                </div>
+                <div class="tap-hint">레시피 보기 ›</div>
+              </div>
+            </div>
+
+            <div class="meal-block">
+              <div class="meal-label">
+                <span class="name">🌙 저녁</span>
+                <button class="swap-btn" data-swap="dinner">🔄 변경</button>
+              </div>
+              <div class="meal-card evening" id="card-dinner" role="button" tabindex="0">
+                <div class="menu-name">소고기 뭇국 &amp; 삼겹살 구이</div>
+                <div class="meta-row">
+                  <span class="dot time">⏱ 35분</span>
+                  <span class="dot num">740 kcal/1인분</span>
+                  <span class="dot">난이도 중</span>
+                </div>
+                <div class="badge-row">
+                  <span class="badge buy">🛒 추가 지출 약 9,800원</span>
+                </div>
+                <div class="tap-hint">레시피 보기 ›</div>
+              </div>
+            </div>
+
+            <div class="nutrition-card">
+              <div class="title-row">
+                <h3 class="h2" style="font-size:14px; margin:0;">오늘의 영양 <span class="sub" style="font-weight:400;">(3인 가구 합계)</span></h3>
+              </div>
+              <div class="segbar" id="today-segbar" role="img" aria-label="에너지 목표 대비"></div>
+              <div class="value-row">
+                <span>에너지</span>
+                <span class="num"><strong id="today-kcal">3,360</strong> / 4,200 kcal</span>
+              </div>
+            </div>
+
+            <button class="cta" id="home-report-cta">주간 리포트 · 장보기 보기</button>
+          </section>
+
+          <!-- 탭2: 식재료 -->
+          <section role="tabpanel" id="panel-pantry" aria-labelledby="tab-pantry">
+            <div class="top-row">
+              <h2 class="h1">식재료 보관함</h2>
+              <button class="icon-btn" id="pantry-add-btn" aria-label="재료 추가">＋</button>
+            </div>
+
+            <h3 class="h2" style="font-size:14px;">보유 중 · <span id="owned-count">0</span>건</h3>
+            <div id="owned-list"></div>
+
+            <div class="section-gap">
+              <h3 class="h2" style="font-size:14px;">제철 추천</h3>
+              <div id="seasonal-list"></div>
+            </div>
+
+            <div class="section-gap">
+              <div class="list-title" style="margin:0 0 10px;">
+                <h3 style="font-size:14px;">구매 예정 · <span id="wishlist-count">0</span>건</h3>
+                <button class="add-inline-btn" id="wishlist-add-btn">+ 추가</button>
+              </div>
+              <div id="wishlist-list"></div>
+              <div class="custom-ing-form" id="wishlist-custom-form" hidden>
+                <input type="text" id="wishlist-custom-input" class="text-input" placeholder="살 재료 이름을 적어주세요" maxlength="20">
+                <button class="add-inline-btn" id="wishlist-custom-submit">추가</button>
+              </div>
+            </div>
+          </section>
+
+          <!-- 탭3: 리포트 -->
+          <section role="tabpanel" id="panel-report" aria-labelledby="tab-report">
+            <div class="top-row">
+              <h2 class="h1">주간 리포트</h2>
+              <div style="width:36px;"></div>
+            </div>
+
+            <div class="segmented" role="tablist" aria-label="리포트 보기">
+              <button class="is-active" id="report-tab-nutrition" data-report-panel="nutrition">영양</button>
+              <button id="report-tab-grocery" data-report-panel="grocery">장보기</button>
+            </div>
+
+            <div id="report-panel-nutrition" class="report-panel">
+              <div class="list-title" style="margin-top:0;">
+                <h3>주간 영양 (목표 대비 달성률)</h3>
+              </div>
+
+              <div class="nutri-row">
+                <div class="label-line"><span class="name">탄수화물 57%</span><span class="target">목표 58%</span></div>
+                <div class="segbar">
+                  <div class="seg filled"></div><div class="seg filled"></div><div class="seg filled"></div><div class="seg filled"></div>
+                  <div class="seg filled"></div><div class="seg filled"></div><div class="seg filled"></div><div class="seg filled"></div>
+                  <div class="seg filled"></div><div class="seg filled"></div>
+                </div>
+              </div>
+              <div class="nutri-row">
+                <div class="label-line"><span class="name">단백질 19%</span><span class="target">목표 18%</span></div>
+                <div class="segbar">
+                  <div class="seg filled"></div><div class="seg filled"></div><div class="seg filled"></div><div class="seg filled"></div>
+                  <div class="seg filled"></div><div class="seg filled"></div><div class="seg filled"></div><div class="seg filled"></div>
+                  <div class="seg filled"></div><div class="seg filled"></div>
+                </div>
+              </div>
+              <div class="nutri-row">
+                <div class="label-line"><span class="name">지방 24%</span><span class="target">목표 24%</span></div>
+                <div class="segbar">
+                  <div class="seg filled"></div><div class="seg filled"></div><div class="seg filled"></div><div class="seg filled"></div>
+                  <div class="seg filled"></div><div class="seg filled"></div><div class="seg filled"></div><div class="seg filled"></div>
+                  <div class="seg filled"></div><div class="seg filled"></div>
+                </div>
+              </div>
+              <div class="notice" style="padding-top:0;"><span class="mark">ⓘ</span><span>막대는 목표 대비 달성률입니다. 하루 편차는 경고하지 않고 주간 평균으로만 판정해요.</span></div>
+
+              <div class="disclaimer">이 앱의 식단·영양 정보는 참고 정보이며 의학적 진단이나 치료를 대체하지 않습니다.</div>
+            </div>
+
+            <div id="report-panel-grocery" class="report-panel" hidden>
+              <div class="cost-hero">
+                <div class="label">이번 주 예상 장보기</div>
+                <div class="amount num">약 39,700원</div>
+                <div class="note">집에 있는 재료 약 45,000원어치를 활용해요</div>
+              </div>
+
+              <div class="list-title">
+                <h3>사야 할 재료</h3>
+                <span>8건 중 7건 가격 확인</span>
+              </div>
+              <div class="grocery-row">
+                <div class="check"></div>
+                <span class="item-name">소고기 국거리 <span class="sub">600g팩</span></span>
+                <span class="price num">21,000원</span>
+              </div>
+              <div class="grocery-row">
+                <div class="check"></div>
+                <span class="item-name">닭가슴살 <span class="sub">500g</span></span>
+                <span class="price num">5,500원</span>
+              </div>
+              <div class="grocery-row">
+                <div class="check"></div>
+                <span class="item-name">애호박 <span class="sub">1개</span></span>
+                <span class="price num">1,800원</span>
+              </div>
+              <div class="grocery-row">
+                <div class="check"></div>
+                <span class="item-name">참깨 <span class="sub">50g</span></span>
+                <span class="price unpriced">가격 정보 없음</span>
+              </div>
+
+              <div class="notice"><span class="mark">ⓘ</span><span>마트 포장 단위 기준이라 끼니별 합계보다 클 수 있어요.</span></div>
+              <div class="notice"><span class="mark">ⓘ</span><span>공개 시세 추정치예요. 세일가는 반영되지 않아요. 출처 KAMIS · 기준일 09-06</span></div>
+            </div>
+          </section>
+
+          <!-- 탭4: 가족 -->
+          <section role="tabpanel" id="panel-family" aria-labelledby="tab-family">
+            <div class="top-row">
+              <h2 class="h1">가족 프로필</h2>
+              <button class="icon-btn" id="family-add-btn" aria-label="구성원 추가">＋</button>
+            </div>
+
+            <div id="family-list"></div>
+
+            <div class="consent-note">알레르기·식이 목표는 <strong>민감정보</strong>로 단말에만 저장돼요. 알레르기를 처음 추가하는 순간 별도 동의를 받아요.</div>
+          </section>
+
+        </div>
+
+        <div class="sheet-backdrop" id="sheet-backdrop"></div>
+        <div class="sheet" id="swap-sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+          <div class="sheet-handle"><span></span></div>
+          <div class="sheet-head">
+            <h3 id="sheet-title">어떤 걸로 바꿀까요?</h3>
+            <button class="sheet-close" id="sheet-close" aria-label="닫기">✕</button>
+          </div>
+          <div class="sheet-body" id="sheet-body"></div>
+        </div>
+        <div class="toast" id="toast"></div>
+
+        <div class="recipe-screen" id="recipe-screen">
+          <div class="recipe-topbar">
+            <button class="icon-btn" id="recipe-back" aria-label="뒤로">←</button>
+            <div class="recipe-title" id="recipe-title-text"></div>
+            <div style="width:36px;"></div>
+          </div>
+          <div class="recipe-body" id="recipe-body-content"></div>
+        </div>
+
+        <nav class="tabbar" role="tablist" aria-label="주요 화면">
+          <button class="tab-btn is-active" id="tab-home" role="tab" aria-selected="true" aria-controls="panel-home" data-target="panel-home">
+            <span class="ico">📅</span>식단
+          </button>
+          <button class="tab-btn" id="tab-pantry" role="tab" aria-selected="false" aria-controls="panel-pantry" data-target="panel-pantry">
+            <span class="ico">🧺</span>식재료
+          </button>
+          <button class="tab-btn" id="tab-report" role="tab" aria-selected="false" aria-controls="panel-report" data-target="panel-report">
+            <span class="ico">📊</span>리포트
+          </button>
+          <button class="tab-btn" id="tab-family" role="tab" aria-selected="false" aria-controls="panel-family" data-target="panel-family">
+            <span class="ico">👪</span>가족
+          </button>
+        </nav>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const tabs = document.querySelectorAll('.tab-btn');
+  tabs.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      tabs.forEach((b) => { b.classList.remove('is-active'); b.setAttribute('aria-selected', 'false'); });
+      document.querySelectorAll('[role="tabpanel"]').forEach((p) => p.classList.remove('is-active'));
+      btn.classList.add('is-active');
+      btn.setAttribute('aria-selected', 'true');
+      document.getElementById(btn.dataset.target).classList.add('is-active');
+    });
+  });
+
+  const reportTabButtons = document.querySelectorAll('[data-report-panel]');
+  reportTabButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      reportTabButtons.forEach((b) => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+      document.getElementById('report-panel-nutrition').hidden = btn.dataset.reportPanel !== 'nutrition';
+      document.getElementById('report-panel-grocery').hidden = btn.dataset.reportPanel !== 'grocery';
+    });
+  });
+
+  document.getElementById('home-report-cta').addEventListener('click', () => {
+    document.getElementById('tab-report').click();
+  });
+
+  // 빈 목록에 붙이는 미니 보글이 — 헤더의 mascot-hero와 같은 얼굴, 크기만 작다.
+  const MINI_MASCOT_SVG = `<svg class="mini-mascot" viewBox="0 0 140 140" aria-hidden="true">
+    <rect x="6" y="74" width="18" height="11" rx="5.5" fill="var(--color-primary-500)"/>
+    <rect x="116" y="74" width="18" height="11" rx="5.5" fill="var(--color-primary-500)"/>
+    <ellipse cx="70" cy="52" rx="42" ry="11" transform="rotate(-4 70 52)" fill="var(--color-meal-evening)"/>
+    <rect x="83" y="36" width="8" height="8" rx="2" transform="rotate(-4 87 40)" fill="var(--color-meal-evening)"/>
+    <rect x="22" y="66" width="96" height="58" rx="26" fill="var(--color-primary-500)"/>
+    <circle class="eye" cx="54" cy="93" r="4.2"/>
+    <circle class="eye" cx="86" cy="93" r="4.2"/>
+    <ellipse cx="45" cy="101" rx="5.5" ry="3.2" fill="var(--color-meal-evening)" opacity="0.55"/>
+    <ellipse cx="95" cy="101" rx="5.5" ry="3.2" fill="var(--color-meal-evening)" opacity="0.55"/>
+    <path class="smile" d="M57,102 Q70,111 83,102" stroke-width="3.4" fill="none" stroke-linecap="round"/>
+  </svg>`;
+
+  // 레시피 화면용 — 헤더의 mascot-hero와 동일하게 김이 나는(움직이는) 버전, 크기만 작다.
+  const RECIPE_MASCOT_SVG = `<svg class="recipe-mascot" viewBox="0 0 140 140" aria-hidden="true">
+    <path class="steam steam-1" d="M50,38 Q45,28 50,20 Q55,12 50,4" stroke="var(--color-text-sub)" stroke-width="4.5" stroke-linecap="round" fill="none" opacity="0.55"/>
+    <path class="steam steam-2" d="M70,34 Q65,22 70,14 Q75,6 70,-2" stroke="var(--color-text-sub)" stroke-width="4.5" stroke-linecap="round" fill="none" opacity="0.6"/>
+    <path class="steam steam-3" d="M90,38 Q85,28 90,20 Q95,12 90,4" stroke="var(--color-text-sub)" stroke-width="4.5" stroke-linecap="round" fill="none" opacity="0.55"/>
+    <rect x="6" y="74" width="18" height="11" rx="5.5" fill="var(--color-primary-500)"/>
+    <rect x="116" y="74" width="18" height="11" rx="5.5" fill="var(--color-primary-500)"/>
+    <ellipse cx="70" cy="52" rx="42" ry="11" transform="rotate(-4 70 52)" fill="var(--color-meal-evening)"/>
+    <rect x="83" y="36" width="8" height="8" rx="2" transform="rotate(-4 87 40)" fill="var(--color-meal-evening)"/>
+    <rect x="22" y="66" width="96" height="58" rx="26" fill="var(--color-primary-500)"/>
+    <circle class="eye" cx="54" cy="93" r="4.2"/>
+    <circle class="eye" cx="86" cy="93" r="4.2"/>
+    <ellipse cx="45" cy="101" rx="5.5" ry="3.2" fill="var(--color-meal-evening)" opacity="0.55"/>
+    <ellipse cx="95" cy="101" rx="5.5" ry="3.2" fill="var(--color-meal-evening)" opacity="0.55"/>
+    <path class="smile" d="M57,102 Q70,111 83,102" stroke-width="3.4" fill="none" stroke-linecap="round"/>
+  </svg>`;
+
+  // ---------- 메뉴 카탈로그 — Swap(§4.5)과 레시피(§4.6) 화면이 공유하는 단일 출처 ----------
+  const CAT_EXPONENT = { main: 1, seasoning: 0.75, broth: 0.85, oil: 0.7, herb: 0.6 };
+  const BASE_SERVINGS = 3;
+
+  const mealCatalog = {
+    '계란 야채죽 & 사과 슬라이스': {
+      time: 15, kcal: 380, difficulty: '하', costKrw: 0,
+      ingredients: [
+        { name: '계란', qty: 2, unit: '개', cat: 'main', source: 'pantry' },
+        { name: '당근', qty: 30, unit: 'g', cat: 'main', source: 'pantry' },
+        { name: '사과', qty: 1, unit: '개', cat: 'main', source: 'pantry' },
+        { name: '소금', qty: 1, unit: '꼬집', cat: 'seasoning', source: 'pantry' },
+      ],
+      steps: [
+        { text: '당근을 잘게 다지고 계란을 풀어 준비합니다.' },
+        { text: '냄비에 밥과 물을 넣고 끓이다 당근과 계란물을 넣어 죽을 완성합니다.', timerSec: 8 * 60 },
+        { text: '사과를 슬라이스해 곁들입니다.' },
+      ],
+    },
+    '소고기 뭇국 & 삼겹살 구이': {
+      time: 35, kcal: 740, difficulty: '중', costKrw: 9800,
+      ingredients: [
+        { name: '소고기 국거리', qty: 450, unit: 'g', cat: 'main', source: 'buy' },
+        { name: '무', qty: 600, unit: 'g', cat: 'main', source: 'buy' },
+        { name: '대파', qty: 2, unit: '대', cat: 'herb', source: 'pantry' },
+        { name: '다진마늘', qty: 2, unit: '큰술', cat: 'seasoning', source: 'pantry' },
+        { name: '물', qty: 1.8, unit: 'L', cat: 'broth', source: 'pantry', hidden: true },
+      ],
+      steps: [
+        { text: '무는 나박썰기하고, 소고기는 핏물을 가볍게 제거합니다.' },
+        { text: '냄비에 참기름과 소고기, 마늘을 넣고 핏기가 가실 때까지 볶습니다.' },
+        { text: '물 {water}와 국간장을 넣고 중약불로 끓입니다.', timerSec: 25 * 60, showBoilNote: true },
+      ],
+    },
+    '두부 김치찌개': {
+      time: 25, kcal: 480, difficulty: '하', costKrw: 0,
+      ingredients: [
+        { name: '두부', qty: 1, unit: '모', cat: 'main', source: 'pantry' },
+        { name: '김치', qty: 200, unit: 'g', cat: 'main', source: 'pantry' },
+        { name: '돼지고기 앞다리살', qty: 100, unit: 'g', cat: 'main', source: 'buy' },
+        { name: '다진마늘', qty: 1, unit: '큰술', cat: 'seasoning', source: 'pantry' },
+      ],
+      steps: [
+        { text: '두부와 김치를 먹기 좋게 썹니다.' },
+        { text: '돼지고기를 볶다가 김치를 넣고 볶습니다.' },
+        { text: '물을 붓고 두부를 넣어 끓입니다.', timerSec: 15 * 60 },
+      ],
+    },
+    '닭볶음탕': {
+      time: 40, kcal: 620, difficulty: '중', costKrw: 6200,
+      ingredients: [
+        { name: '닭가슴살', qty: 500, unit: 'g', cat: 'main', source: 'buy' },
+        { name: '감자', qty: 300, unit: 'g', cat: 'main', source: 'pantry' },
+        { name: '당근', qty: 100, unit: 'g', cat: 'main', source: 'pantry' },
+        { name: '고추장', qty: 2, unit: '큰술', cat: 'seasoning', source: 'pantry' },
+      ],
+      steps: [
+        { text: '닭고기와 채소를 큼직하게 썹니다.' },
+        { text: '양념장을 만들어 재료와 함께 버무립니다.' },
+        { text: '물을 붓고 중약불로 조립니다.', timerSec: 30 * 60 },
+      ],
+    },
+    '돼지고기 두루치기': {
+      time: 35, kcal: 690, difficulty: '중', costKrw: 7400,
+      ingredients: [
+        { name: '돼지고기 앞다리살', qty: 400, unit: 'g', cat: 'main', source: 'buy' },
+        { name: '양파', qty: 1, unit: '개', cat: 'main', source: 'pantry' },
+        { name: '대파', qty: 1, unit: '대', cat: 'herb', source: 'pantry' },
+        { name: '고추장', qty: 2, unit: '큰술', cat: 'seasoning', source: 'pantry' },
+      ],
+      steps: [
+        { text: '돼지고기와 채소를 먹기 좋게 썹니다.' },
+        { text: '양념에 재운 고기를 센 불에서 볶습니다.', timerSec: 12 * 60 },
+      ],
+    },
+    '고등어 조림': {
+      time: 30, kcal: 540, difficulty: '하', costKrw: 5900,
+      ingredients: [
+        { name: '고등어', qty: 2, unit: '미', cat: 'main', source: 'buy' },
+        { name: '무', qty: 300, unit: 'g', cat: 'main', source: 'pantry' },
+        { name: '다진마늘', qty: 1, unit: '큰술', cat: 'seasoning', source: 'pantry' },
+        { name: '고추장', qty: 1, unit: '큰술', cat: 'seasoning', source: 'pantry' },
+      ],
+      steps: [
+        { text: '냄비에 무를 깔고 고등어를 올립니다.' },
+        { text: '양념을 끼얹어 중약불로 조립니다.', timerSec: 20 * 60 },
+      ],
+    },
+    '감자탕': {
+      time: 40, kcal: 710, difficulty: '중', costKrw: 8100,
+      ingredients: [
+        { name: '돼지고기 앞다리살', qty: 500, unit: 'g', cat: 'main', source: 'buy' },
+        { name: '감자', qty: 400, unit: 'g', cat: 'main', source: 'pantry' },
+        { name: '대파', qty: 2, unit: '대', cat: 'herb', source: 'pantry' },
+        { name: '된장', qty: 1, unit: '큰술', cat: 'seasoning', source: 'pantry' },
+      ],
+      steps: [
+        { text: '고기를 초벌로 삶아 냅니다.' },
+        { text: '감자와 양념을 넣고 끓입니다.', timerSec: 30 * 60 },
+      ],
+    },
+    '두부 계란 스크램블': {
+      time: 10, kcal: 320, difficulty: '하', costKrw: 0,
+      ingredients: [
+        { name: '두부', qty: 0.5, unit: '모', cat: 'main', source: 'pantry' },
+        { name: '계란', qty: 2, unit: '개', cat: 'main', source: 'pantry' },
+        { name: '식용유', qty: 1, unit: '작은술', cat: 'oil', source: 'pantry' },
+      ],
+      steps: [
+        { text: '두부를 으깨고 계란을 풀어 섞습니다.' },
+        { text: '팬에 기름을 두르고 약불에서 저어가며 익힙니다.', timerSec: 5 * 60 },
+      ],
+    },
+    '시금치 계란말이': {
+      time: 12, kcal: 300, difficulty: '하', costKrw: 0,
+      ingredients: [
+        { name: '시금치', qty: 50, unit: 'g', cat: 'main', source: 'pantry' },
+        { name: '계란', qty: 3, unit: '개', cat: 'main', source: 'pantry' },
+        { name: '소금', qty: 1, unit: '꼬집', cat: 'seasoning', source: 'pantry' },
+      ],
+      steps: [
+        { text: '시금치를 잘게 썰어 계란물에 섞습니다.' },
+        { text: '팬에 얇게 부어 돌돌 말아줍니다.', timerSec: 6 * 60 },
+      ],
+    },
+    '감자 계란찜': {
+      time: 15, kcal: 340, difficulty: '하', costKrw: 1800,
+      ingredients: [
+        { name: '감자', qty: 1, unit: '개', cat: 'main', source: 'pantry' },
+        { name: '계란', qty: 2, unit: '개', cat: 'main', source: 'buy' },
+        { name: '다진마늘', qty: 1, unit: '작은술', cat: 'seasoning', source: 'pantry' },
+      ],
+      steps: [
+        { text: '감자를 잘게 썰어 삶습니다.' },
+        { text: '계란물과 섞어 찜기에 찝니다.', timerSec: 12 * 60 },
+      ],
+    },
+    '사과 오트밀': {
+      time: 8, kcal: 290, difficulty: '하', costKrw: 2400,
+      ingredients: [
+        { name: '사과', qty: 1, unit: '개', cat: 'main', source: 'pantry' },
+        { name: '오트밀', qty: 40, unit: 'g', cat: 'main', source: 'buy' },
+        { name: '우유', qty: 200, unit: 'ml', cat: 'broth', source: 'buy' },
+      ],
+      steps: [
+        { text: '오트밀에 우유를 붓고 전자레인지에 데웁니다.', timerSec: 3 * 60 },
+        { text: '사과를 잘게 썰어 위에 올립니다.' },
+      ],
+    },
+    '당근 계란볶음밥': {
+      time: 15, kcal: 410, difficulty: '중', costKrw: 3100,
+      ingredients: [
+        { name: '당근', qty: 50, unit: 'g', cat: 'main', source: 'pantry' },
+        { name: '계란', qty: 2, unit: '개', cat: 'main', source: 'pantry' },
+        { name: '밥', qty: 200, unit: 'g', cat: 'main', source: 'pantry' },
+        { name: '식용유', qty: 1, unit: '큰술', cat: 'oil', source: 'pantry' },
+      ],
+      steps: [
+        { text: '당근을 잘게 다집니다.' },
+        { text: '팬에 기름을 두르고 밥과 당근, 계란을 볶습니다.', timerSec: 8 * 60 },
+      ],
+    },
+  };
+
+  const candidateNames = {
+    breakfast: ['두부 계란 스크램블', '시금치 계란말이', '감자 계란찜', '사과 오트밀', '당근 계란볶음밥'],
+    dinner: ['두부 김치찌개', '닭볶음탕', '돼지고기 두루치기', '고등어 조림', '감자탕'],
+  };
+
+  const currentMealName = { breakfast: '계란 야채죽 & 사과 슬라이스', dinner: '소고기 뭇국 & 삼겹살 구이' };
+
+  // 명세 §4.3: 월~일 아침 7 + 저녁 7 = 14끼니. 이 목업엔 서로 다른 요리가 6종류뿐이라(기본 2 + Swap 후보 10)
+  // 일요일은 불가피하게 월요일과 겹친다 — 실제 서비스라면 재료 500종 기준으로 14개 전부 다르게 나온다.
+  const HOUSEHOLD_SIZE = 3;
+  const DAILY_TARGET_KCAL_HOUSEHOLD = 4200; // §2.1 참조 케이스: 아침+저녁 관리 대상 합계
+  const weeklyPlan = {
+    mon: { breakfast: '계란 야채죽 & 사과 슬라이스', dinner: '소고기 뭇국 & 삼겹살 구이' },
+    tue: { breakfast: '두부 계란 스크램블', dinner: '두부 김치찌개' },
+    wed: { breakfast: '시금치 계란말이', dinner: '닭볶음탕' },
+    thu: { breakfast: '감자 계란찜', dinner: '돼지고기 두루치기' },
+    fri: { breakfast: '사과 오트밀', dinner: '고등어 조림' },
+    sat: { breakfast: '당근 계란볶음밥', dinner: '감자탕' },
+    sun: { breakfast: '계란 야채죽 & 사과 슬라이스', dinner: '소고기 뭇국 & 삼겹살 구이' },
+  };
+  let activeDay = 'mon';
+
+  const krw = (n) => n.toLocaleString('ko-KR');
+  const costLabel = (c) => (c === 0
+    ? '<span class="badge owned">✓ 집에 있는 재료로 100%</span>'
+    : `<span class="badge buy">🛒 추가 지출 약 ${krw(c)}원</span>`);
+
+  function applyMealToCard(mealType, name) {
+    const chosen = mealCatalog[name];
+    const card = document.getElementById(`card-${mealType}`);
+    card.querySelector('.menu-name').textContent = name;
+    card.querySelector('.dot.time').textContent = `⏱ ${chosen.time}분`;
+    card.querySelectorAll('.dot.num')[0].textContent = `${chosen.kcal} kcal/1인분`;
+    card.querySelectorAll('.dot')[2].textContent = `난이도 ${chosen.difficulty}`;
+    card.querySelector('.badge-row').innerHTML = costLabel(chosen.costKrw);
+  }
+
+  function updateNutritionSummary() {
+    const breakfastKcal = mealCatalog[currentMealName.breakfast].kcal;
+    const dinnerKcal = mealCatalog[currentMealName.dinner].kcal;
+    const totalHousehold = (breakfastKcal + dinnerKcal) * HOUSEHOLD_SIZE;
+    const filledSegments = Math.max(0, Math.min(10, Math.round((totalHousehold / DAILY_TARGET_KCAL_HOUSEHOLD) * 10)));
+
+    document.getElementById('today-kcal').textContent = totalHousehold.toLocaleString('ko-KR');
+    document.getElementById('today-segbar').innerHTML = Array.from({ length: 10 }, (_, i) =>
+      `<div class="seg${i < filledSegments ? ' filled' : ''}"></div>`
+    ).join('');
+    document.getElementById('today-segbar').setAttribute('aria-label', `에너지 ${totalHousehold.toLocaleString('ko-KR')} / ${DAILY_TARGET_KCAL_HOUSEHOLD.toLocaleString('ko-KR')} kcal, 목표의 ${Math.round((totalHousehold / DAILY_TARGET_KCAL_HOUSEHOLD) * 100)}%`);
+  }
+
+  function selectDay(day) {
+    activeDay = day;
+    document.querySelectorAll('#week-strip .day').forEach((btn) => btn.classList.toggle('is-active', btn.dataset.day === day));
+    currentMealName.breakfast = weeklyPlan[day].breakfast;
+    currentMealName.dinner = weeklyPlan[day].dinner;
+    applyMealToCard('breakfast', currentMealName.breakfast);
+    applyMealToCard('dinner', currentMealName.dinner);
+    updateNutritionSummary();
+  }
+
+  document.querySelectorAll('#week-strip .day').forEach((btn) => {
+    btn.addEventListener('click', () => selectDay(btn.dataset.day));
+  });
+  updateNutritionSummary();
+
+  // ---------- Swap 바텀시트 (§4.5: 후보 5개를 비용과 함께 제시한다) ----------
+  const backdrop = document.getElementById('sheet-backdrop');
+  const sheet = document.getElementById('swap-sheet');
+  const sheetBody = document.getElementById('sheet-body');
+  const sheetTitle = document.getElementById('sheet-title');
+  const toast = document.getElementById('toast');
+  let toastTimer = null;
+
+  function openSwapSheet(mealType) {
+    sheetTitle.textContent = '어떤 걸로 바꿀까요?';
+    sheetBody.innerHTML = candidateNames[mealType].map((name) => {
+      const c = mealCatalog[name];
+      return `
+        <div class="candidate-card">
+          <div class="candidate-info">
+            <div class="name">${name}</div>
+            <div class="meta">
+              <span>⏱${c.time}분</span>
+              <span class="num">${c.kcal} kcal/1인분</span>
+              ${costLabel(c.costKrw)}
+            </div>
+          </div>
+          <button class="pick-btn" data-name="${name}">선택</button>
+        </div>
+      `;
+    }).join('');
+
+    sheetBody.querySelectorAll('.pick-btn').forEach((btn) => {
+      btn.addEventListener('click', () => selectCandidate(mealType, btn.dataset.name));
+    });
+
+    backdrop.classList.add('is-open');
+    sheet.classList.add('is-open');
+  }
+
+  function closeSwapSheet() {
+    backdrop.classList.remove('is-open');
+    sheet.classList.remove('is-open');
+  }
+
+  function selectCandidate(mealType, name) {
+    const prevCost = mealCatalog[currentMealName[mealType]].costKrw;
+    const chosen = mealCatalog[name];
+    currentMealName[mealType] = name;
+    weeklyPlan[activeDay][mealType] = name; // 이 요일에서 바꾼 내용은 다른 요일을 눌렀다 돌아와도 유지된다
+
+    applyMealToCard(mealType, name);
+    updateNutritionSummary();
+
+    const delta = chosen.costKrw - prevCost;
+    const deltaText = delta === 0 ? '금액 변동 없어요' : `예상 금액 ${delta > 0 ? '+' : '-'}${krw(Math.abs(delta))}원`;
+
+    closeSwapSheet();
+    showToast(`바꿨어요. ${deltaText}`);
+  }
+
+  function showToast(message) {
+    toast.textContent = message;
+    toast.classList.add('is-open');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('is-open'), 2500);
+  }
+
+  // ---------- 식재료 보관함 (§4.2: 보유 재료·위시리스트·제철 추천, 탭으로 추가/조절) ----------
+  const pantryMaster = {
+    egg:      { name: '계란',       emoji: '🥚', unit: '알',  defaultQty: 10,  step: 1   },
+    tofu:     { name: '두부',       emoji: '🧊', unit: '모',  defaultQty: 1,   step: 1   },
+    milk:     { name: '우유',       emoji: '🥛', unit: 'ml',  defaultQty: 1000, step: 100 },
+    cheese:   { name: '치즈',       emoji: '🧀', unit: '매',  defaultQty: 10,  step: 1   },
+    apple:    { name: '사과',       emoji: '🍎', unit: '개',  defaultQty: 1,   step: 1   },
+    carrot:   { name: '당근',       emoji: '🥕', unit: '개',  defaultQty: 3,   step: 1   },
+    potato:   { name: '감자',       emoji: '🥔', unit: 'g',   defaultQty: 1000, step: 100 },
+    onion:    { name: '양파',       emoji: '🧅', unit: '개',  defaultQty: 3,   step: 1   },
+    spinach:  { name: '시금치',     emoji: '🥬', unit: 'g',   defaultQty: 300, step: 50  },
+    shiitake: { name: '표고버섯',   emoji: '🍄', unit: 'g',   defaultQty: 150, step: 50  },
+    shrimp:   { name: '새우',       emoji: '🦐', unit: 'g',   defaultQty: 300, step: 50  },
+    mackerel: { name: '고등어',     emoji: '🐟', unit: '미',  defaultQty: 2,   step: 1   },
+    beef:     { name: '소고기',     emoji: '🥩', unit: 'g',   defaultQty: 600, step: 100 },
+    pork:     { name: '돼지고기',   emoji: '🥓', unit: 'g',   defaultQty: 500, step: 100 },
+    chicken:  { name: '닭가슴살',   emoji: '🍗', unit: 'g',   defaultQty: 500, step: 100 },
+    garlic:   { name: '다진마늘',   emoji: '🧄', unit: 'g',   defaultQty: 200, step: 50  },
+    beefSoup: { name: '소고기 국거리', emoji: '🍲', unit: 'g', defaultQty: 600, step: 100 },
+  };
+  const pantryGridIds = ['egg', 'tofu', 'milk', 'cheese', 'apple', 'carrot', 'potato', 'onion', 'spinach', 'shiitake', 'shrimp', 'mackerel', 'beef', 'pork', 'chicken', 'garlic'];
+
+  const pantryState = {
+    owned: [
+      { id: 'egg', qty: 10, expiry: '09-14' },
+      { id: 'tofu', qty: 1, expiry: '09-10', priority: true },
+      { id: 'garlic', qty: 200, staple: true },
+    ],
+    seasonal: [{ id: 'shiitake', reason: '비타민D 보완 재료' }],
+    wishlist: ['beefSoup'],
+  };
+
+  function formatPantryQty(qty, unit) {
+    const text = Number.isInteger(qty) ? String(qty) : qty.toFixed(1);
+    return `${text}${unit}`;
+  }
+
+  function pantryThumbHtml(m) {
+    return m.image
+      ? `<img src="${m.image}" alt="" class="pantry-thumb-img" onerror="handleThumbImgError(this, '${m.emoji}')">`
+      : `<div class="pantry-thumb">${m.emoji}</div>`;
+  }
+
+  // 사진이 깨져서(예: 브라우저가 못 읽는 형식) 표시가 실패하면 이모지 타일로 조용히 되돌린다.
+  function handleThumbImgError(imgEl, emoji) {
+    const fallback = document.createElement('div');
+    fallback.className = 'pantry-thumb';
+    fallback.textContent = emoji;
+    imgEl.replaceWith(fallback);
+  }
+
+  function renderPantry() {
+    const ownedListEl = document.getElementById('owned-list');
+    const seasonalListEl = document.getElementById('seasonal-list');
+    const wishlistListEl = document.getElementById('wishlist-list');
+
+    document.getElementById('owned-count').textContent = pantryState.owned.length;
+    document.getElementById('wishlist-count').textContent = pantryState.wishlist.length;
+
+    ownedListEl.innerHTML = pantryState.owned.length ? pantryState.owned.map((entry) => {
+      const m = pantryMaster[entry.id];
+      return `
+        <div class="pantry-item">
+          ${pantryThumbHtml(m)}
+          <div class="pantry-info">
+            <div class="name">${m.name}</div>
+            <div class="meta">${entry.expiry ? `유통기한 ${entry.expiry} · ` : ''}<span class="qty-value num">${formatPantryQty(entry.qty, m.unit)}</span></div>
+          </div>
+          ${entry.priority ? '<span class="tag priority">D-2 임박</span>' : ''}
+          ${entry.staple ? '<span class="tag staple">양념</span>' : ''}
+          <div class="qty-stepper">
+            <button class="mini-step" data-owned-dec="${entry.id}" aria-label="${m.name} 줄이기">−</button>
+            <button class="mini-step" data-owned-inc="${entry.id}" aria-label="${m.name} 늘리기">+</button>
+          </div>
+        </div>
+      `;
+    }).join('') : `<div class="empty-row">${MINI_MASCOT_SVG}보유 중인 재료가 없어요.<br>+ 버튼으로 추가해보세요.</div>`;
+
+    seasonalListEl.innerHTML = pantryState.seasonal.length ? pantryState.seasonal.map((entry) => {
+      const m = pantryMaster[entry.id];
+      return `
+        <div class="pantry-item">
+          ${pantryThumbHtml(m)}
+          <div class="pantry-info"><div class="name">${m.name}</div><div class="meta">${entry.reason}</div></div>
+          <span class="tag seasonal">★ 제철</span>
+          <button class="add-inline-btn" data-seasonal-add="${entry.id}">담기</button>
+        </div>
+      `;
+    }).join('') : `<div class="empty-row">${MINI_MASCOT_SVG}이번 달 제철 추천이 없어요.</div>`;
+
+    wishlistListEl.innerHTML = pantryState.wishlist.length ? pantryState.wishlist.map((id) => {
+      const m = pantryMaster[id];
+      return `
+        <div class="pantry-item">
+          ${pantryThumbHtml(m)}
+          <div class="pantry-info"><div class="name">${m.name}</div><div class="meta">위시리스트</div></div>
+          <button class="add-inline-btn" data-wishlist-buy="${id}">구매 완료</button>
+        </div>
+      `;
+    }).join('') : `<div class="empty-row">${MINI_MASCOT_SVG}살 게 없어요.</div>`;
+
+    ownedListEl.querySelectorAll('[data-owned-dec]').forEach((btn) => btn.addEventListener('click', () => changeOwnedQty(btn.dataset.ownedDec, -1)));
+    ownedListEl.querySelectorAll('[data-owned-inc]').forEach((btn) => btn.addEventListener('click', () => changeOwnedQty(btn.dataset.ownedInc, 1)));
+    seasonalListEl.querySelectorAll('[data-seasonal-add]').forEach((btn) => btn.addEventListener('click', () => addSeasonalToOwned(btn.dataset.seasonalAdd)));
+    wishlistListEl.querySelectorAll('[data-wishlist-buy]').forEach((btn) => btn.addEventListener('click', () => buyWishlistItem(btn.dataset.wishlistBuy)));
+  }
+
+  function changeOwnedQty(id, direction) {
+    const entry = pantryState.owned.find((o) => o.id === id);
+    if (!entry) return;
+    const m = pantryMaster[id];
+    entry.qty += direction * m.step;
+    if (entry.qty <= 0) {
+      pantryState.owned = pantryState.owned.filter((o) => o.id !== id);
+      showToast(`${m.name}을(를) 보관함에서 뺐어요.`);
+    }
+    renderPantry();
+  }
+
+  function addSeasonalToOwned(id) {
+    const entry = pantryState.seasonal.find((s) => s.id === id);
+    if (!entry) return;
+    const m = pantryMaster[id];
+    pantryState.seasonal = pantryState.seasonal.filter((s) => s.id !== id);
+    if (!pantryState.owned.some((o) => o.id === id)) {
+      pantryState.owned.push({ id, qty: m.defaultQty });
+    }
+    renderPantry();
+    showToast(`${m.name}을(를) 보관함에 담았어요.`);
+  }
+
+  function buyWishlistItem(id) {
+    const m = pantryMaster[id];
+    pantryState.wishlist = pantryState.wishlist.filter((w) => w !== id);
+    if (!pantryState.owned.some((o) => o.id === id)) {
+      pantryState.owned.push({ id, qty: m.defaultQty });
+    }
+    renderPantry();
+    showToast(`${m.name}을(를) 보관함으로 옮겼어요.`);
+  }
+
+  function toggleGridIngredient(id) {
+    const existing = pantryState.owned.find((o) => o.id === id);
+    const m = pantryMaster[id];
+    if (existing) {
+      pantryState.owned = pantryState.owned.filter((o) => o.id !== id);
+      showToast(`${m.name}을(를) 뺐어요.`);
+    } else {
+      pantryState.owned.push({ id, qty: m.defaultQty });
+      showToast(`${m.name} ${formatPantryQty(m.defaultQty, m.unit)} 담았어요.`);
+    }
+    renderPantry();
+    renderIngredientGrid();
+  }
+
+  let customIngredientCounter = 0;
+  let pendingCustomPhoto = null; // 기타 재료 추가 폼에서 고른 사진(data URL). 제출 시 소비되고 초기화된다.
+
+  function addCustomIngredient(name, targetList, imageDataUrl) {
+    const id = `custom_${targetList}_${++customIngredientCounter}`;
+    pantryMaster[id] = {
+      name,
+      emoji: targetList === 'wishlist' ? '🛒' : '📦',
+      unit: '개',
+      defaultQty: 1,
+      step: 1,
+      image: imageDataUrl || null,
+    };
+    if (targetList === 'wishlist') {
+      pantryState.wishlist.push(id);
+    } else {
+      pantryState.owned.push({ id, qty: 1 });
+    }
+    renderPantry();
+    return id;
+  }
+
+  function renderIngredientGrid() {
+    pendingCustomPhoto = null;
+    sheetBody.innerHTML = `
+      <div class="sheet-hint">탭해서 켜고 끌 수 있어요 — 자주 쓰는 재료 위주로 모았어요. 목록에 없으면 기타로 직접 적어주세요.</div>
+      <div class="ingredient-grid">
+        ${pantryGridIds.map((id) => {
+          const m = pantryMaster[id];
+          const isOwned = pantryState.owned.some((o) => o.id === id);
+          return `<button class="ing-chip ${isOwned ? 'is-selected' : ''}" data-grid-id="${id}">
+            <span class="emoji">${m.emoji}</span>${m.name}
+          </button>`;
+        }).join('')}
+        <button class="ing-chip" id="custom-ing-chip"><span class="emoji">✍️</span>기타</button>
+      </div>
+      <div class="custom-ing-form" id="custom-ing-form" hidden>
+        <button type="button" class="photo-picker" id="custom-ing-photo-btn" aria-label="사진 추가">📷</button>
+        <input type="file" accept="image/*" id="custom-ing-photo-input" hidden>
+        <input type="text" id="custom-ing-input" class="text-input" placeholder="재료 이름을 적어주세요" maxlength="20">
+        <button class="add-inline-btn" id="custom-ing-submit">추가</button>
+      </div>
+      <div class="sheet-hint" id="custom-ing-photo-hint" hidden style="margin-top:6px;">JPG·PNG 사진을 골라주세요 — 일부 형식(HEIC 등)은 미리보기가 안 될 수 있어요.</div>
+    `;
+    sheetBody.querySelectorAll('[data-grid-id]').forEach((btn) => {
+      btn.addEventListener('click', () => toggleGridIngredient(btn.dataset.gridId));
+    });
+
+    const customForm = document.getElementById('custom-ing-form');
+    const customInput = document.getElementById('custom-ing-input');
+    const photoBtn = document.getElementById('custom-ing-photo-btn');
+    const photoInput = document.getElementById('custom-ing-photo-input');
+    const photoHint = document.getElementById('custom-ing-photo-hint');
+    const submitBtn = document.getElementById('custom-ing-submit');
+    let isPhotoLoading = false;
+
+    document.getElementById('custom-ing-chip').addEventListener('click', () => {
+      customForm.hidden = !customForm.hidden;
+      photoHint.hidden = customForm.hidden;
+      if (!customForm.hidden) customInput.focus();
+    });
+
+    photoBtn.addEventListener('click', () => photoInput.click());
+    photoInput.addEventListener('change', () => {
+      const file = photoInput.files && photoInput.files[0];
+      if (!file) return;
+
+      isPhotoLoading = true;
+      submitBtn.disabled = true;
+      photoBtn.textContent = '⏳';
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        const dataUrl = reader.result;
+        // <img>가 실제로 디코딩할 수 있는 형식인지 미리 확인한다 — HEIC 등은 읽기는 되지만 표시가 안 되는 경우가 있다.
+        const probe = new Image();
+        probe.onload = () => {
+          pendingCustomPhoto = dataUrl;
+          photoBtn.innerHTML = `<img src="${dataUrl}" alt="">`;
+          isPhotoLoading = false;
+          submitBtn.disabled = false;
+        };
+        probe.onerror = () => {
+          pendingCustomPhoto = null;
+          photoBtn.textContent = '📷';
+          isPhotoLoading = false;
+          submitBtn.disabled = false;
+          showToast('이 사진은 미리보기가 안 돼요. JPG나 PNG로 다시 시도해주세요.');
+        };
+        probe.src = dataUrl;
+      };
+      reader.onerror = () => {
+        isPhotoLoading = false;
+        submitBtn.disabled = false;
+        photoBtn.textContent = '📷';
+        showToast('사진을 불러오지 못했어요.');
+      };
+      reader.readAsDataURL(file);
+    });
+
+    const submit = () => {
+      if (isPhotoLoading) { showToast('사진을 불러오는 중이에요. 잠시만요.'); return; }
+      const name = customInput.value.trim();
+      if (!name) { customInput.focus(); return; }
+      addCustomIngredient(name, 'owned', pendingCustomPhoto);
+      showToast(`${name} 담았어요.`);
+      renderIngredientGrid();
+    };
+    document.getElementById('custom-ing-submit').addEventListener('click', submit);
+    customInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); submit(); } });
+  }
+
+  function openIngredientSheet() {
+    sheetTitle.textContent = '냉장고에 뭐가 있나요?';
+    renderIngredientGrid();
+    backdrop.classList.add('is-open');
+    sheet.classList.add('is-open');
+  }
+
+  document.getElementById('pantry-add-btn').addEventListener('click', openIngredientSheet);
+
+  // 구매 예정(위시리스트)에 이름을 직접 적어 추가하기
+  const wishlistAddBtn = document.getElementById('wishlist-add-btn');
+  const wishlistCustomForm = document.getElementById('wishlist-custom-form');
+  const wishlistCustomInput = document.getElementById('wishlist-custom-input');
+  wishlistAddBtn.addEventListener('click', () => {
+    wishlistCustomForm.hidden = !wishlistCustomForm.hidden;
+    if (!wishlistCustomForm.hidden) wishlistCustomInput.focus();
+  });
+  const submitWishlistCustom = () => {
+    const name = wishlistCustomInput.value.trim();
+    if (!name) { wishlistCustomInput.focus(); return; }
+    addCustomIngredient(name, 'wishlist');
+    wishlistCustomInput.value = '';
+    wishlistCustomForm.hidden = true;
+    showToast(`${name}을(를) 구매 예정에 추가했어요.`);
+  };
+  document.getElementById('wishlist-custom-submit').addEventListener('click', submitWishlistCustom);
+  wishlistCustomInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); submitWishlistCustom(); } });
+
+  renderPantry();
+
+  // ---------- 가족 프로필 (§4.1: 구성원 추가, 목표 kcal은 역할 × 활동량 계수로 자동 산출) ----------
+  const ROLE_LABEL = {
+    adult_male: '성인 남성', adult_female: '성인 여성',
+    teen_male: '청소년 남', teen_female: '청소년 여',
+    child: '어린이', infant: '영유아', senior: '고령자',
+  };
+  const ROLE_BASE_KCAL = {
+    adult_male: 2400, adult_female: 1900, teen_male: 2700, teen_female: 2200,
+    child: 1700, infant: 1100, senior: 1900,
+  };
+  const ACTIVITY_LABEL = { light: '활동량 적음', moderate: '활동량 보통', active: '활동량 많음' };
+  const ACTIVITY_COEF = { light: 0.9, moderate: 1.0, active: 1.15 };
+
+  const familyMembers = [
+    { name: '아빠', role: 'adult_male', activity: 'moderate', diet: '표준 프로파일' },
+    { name: '엄마', role: 'adult_female', activity: 'light', diet: '체중 감량', allergies: ['우유'], warn: true },
+    { name: '첫째', role: 'teen_male', activity: 'active', diet: '성장기 강화' },
+  ];
+
+  function memberKcal(m) {
+    return Math.round(ROLE_BASE_KCAL[m.role] * ACTIVITY_COEF[m.activity]);
+  }
+
+  function renderFamily() {
+    const listEl = document.getElementById('family-list');
+    listEl.innerHTML = familyMembers.length ? familyMembers.map((m, i) => `
+      <div class="member-card">
+        <div class="head">
+          <div class="who"><div class="avatar">${m.name.slice(0, 2)}</div><span class="body-m" style="font-weight:600;">${m.name} · ${ROLE_LABEL[m.role]}</span></div>
+          <div class="head-right">
+            <span class="kcal num">${memberKcal(m).toLocaleString('ko-KR')} kcal/일</span>
+            <button class="mini-step" data-member-remove="${i}" aria-label="${m.name} 빼기">−</button>
+          </div>
+        </div>
+        <div class="sub-row">
+          <span class="chip">${ACTIVITY_LABEL[m.activity]}</span>
+          <span class="chip">${m.diet}</span>
+          ${(m.allergies || []).map((a) => `<span class="chip allergy">⚠ ${a}</span>`).join('')}
+        </div>
+        ${m.warn ? '<div class="warn-note">단백질 비중이 권장 상한(20%)을 넘어요 — 체중 감량 프로파일 선택 시 나타나는 정상 범위 밖 신호예요.</div>' : ''}
+      </div>
+    `).join('') : `<div class="empty-row">${MINI_MASCOT_SVG}등록된 가족이 없어요.<br>+ 버튼으로 추가해보세요.</div>`;
+
+    listEl.querySelectorAll('[data-member-remove]').forEach((btn) => {
+      btn.addEventListener('click', () => removeMember(Number(btn.dataset.memberRemove)));
+    });
+  }
+
+  function removeMember(index) {
+    const [removed] = familyMembers.splice(index, 1);
+    renderFamily();
+    if (removed) showToast(`${removed.name}님을 가족에서 뺐어요.`);
+  }
+
+  function renderFamilyForm() {
+    sheetBody.innerHTML = `
+      <div class="form-group">
+        <label class="form-label" for="member-name-input">이름</label>
+        <input type="text" id="member-name-input" class="text-input" placeholder="예: 할머니" maxlength="10">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="member-role-select">구분</label>
+        <select id="member-role-select" class="text-input">
+          ${Object.entries(ROLE_LABEL).map(([v, label]) => `<option value="${v}">${label}</option>`).join('')}
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="member-activity-select">활동량</label>
+        <select id="member-activity-select" class="text-input">
+          <option value="light">적음</option>
+          <option value="moderate" selected>보통</option>
+          <option value="active">많음</option>
+        </select>
+      </div>
+      <button class="cta" id="member-submit-btn">가족으로 추가</button>
+    `;
+    document.getElementById('member-submit-btn').addEventListener('click', () => {
+      const name = document.getElementById('member-name-input').value.trim();
+      if (!name) { document.getElementById('member-name-input').focus(); return; }
+      const role = document.getElementById('member-role-select').value;
+      const activity = document.getElementById('member-activity-select').value;
+      familyMembers.push({ name, role, activity, diet: '표준 프로파일' });
+      renderFamily();
+      closeSwapSheet();
+      showToast(`${name}님을 가족으로 추가했어요.`);
+    });
+  }
+
+  function openFamilySheet() {
+    sheetTitle.textContent = '가족 구성원 추가';
+    renderFamilyForm();
+    backdrop.classList.add('is-open');
+    sheet.classList.add('is-open');
+  }
+
+  document.getElementById('family-add-btn').addEventListener('click', openFamilySheet);
+  renderFamily();
+
+  document.querySelectorAll('[data-swap]').forEach((btn) => {
+    btn.addEventListener('click', (e) => { e.stopPropagation(); openSwapSheet(btn.dataset.swap); });
+  });
+  document.getElementById('sheet-close').addEventListener('click', closeSwapSheet);
+  backdrop.addEventListener('click', closeSwapSheet);
+
+  // ---------- 레시피 화면 (§4.6: 인분 스케일링은 재료군마다 다른 지수를 쓴다) ----------
+  const recipeScreen = document.getElementById('recipe-screen');
+  const recipeTitleText = document.getElementById('recipe-title-text');
+  const recipeBodyContent = document.getElementById('recipe-body-content');
+  let recipeServings = BASE_SERVINGS;
+  let recipeMealType = null;
+  let timerInterval = null;
+
+  function roundQty(rawQty, unit) {
+    if (unit === 'g' || unit === 'ml') return Math.round(rawQty / 10) * 10;
+    return Math.round(rawQty * 2) / 2;
+  }
+
+  function formatQty(qty, unit) {
+    const text = Number.isInteger(qty) ? String(qty) : qty.toFixed(1);
+    return `${text}${unit}`;
+  }
+
+  function scaledIngredient(ing, servings) {
+    const exponent = CAT_EXPONENT[ing.cat] ?? 1;
+    const raw = ing.qty * Math.pow(servings / BASE_SERVINGS, exponent);
+    return roundQty(raw, ing.unit);
+  }
+
+  function renderRecipe() {
+    clearInterval(timerInterval);
+    const recipe = mealCatalog[currentMealName[recipeMealType]];
+    recipeTitleText.textContent = currentMealName[recipeMealType];
+
+    const hasBroth = recipe.ingredients.some((i) => i.cat === 'broth');
+    const boilDeltaMin = hasBroth ? Math.round((recipeServings - BASE_SERVINGS) * 1.5) : 0;
+
+    const visibleIngredients = recipe.ingredients.filter((i) => !i.hidden);
+    const ingredientsHtml = visibleIngredients.map((ing) => {
+      const q = scaledIngredient(ing, recipeServings);
+      const isBuy = ing.source === 'buy';
+      return `
+        <div class="ingredient-row">
+          <span class="ing-status ${isBuy ? 'buy' : 'pantry'}">${isBuy ? '🛒' : '✓'}</span>
+          <span class="ing-name">${ing.name}</span>
+          <span class="ing-qty">${formatQty(q, ing.unit)}</span>
+          <span class="ing-tag">${isBuy ? '사야 함' : '집에 있음'}</span>
+        </div>
+      `;
+    }).join('');
+
+    const stepsHtml = recipe.steps.map((step, i) => {
+      let text = step.text;
+      const waterIng = recipe.ingredients.find((ing) => ing.cat === 'broth');
+      if (text.includes('{water}') && waterIng) {
+        const q = scaledIngredient(waterIng, recipeServings);
+        text = text.replace('{water}', formatQty(q, waterIng.unit));
+      }
+      const timerSec = step.timerSec ? step.timerSec + (step.showBoilNote ? boilDeltaMin * 60 : 0) : null;
+      const boilNote = step.showBoilNote && boilDeltaMin !== 0
+        ? `<div class="step-note">ⓘ ${recipeServings}인분은 ${BASE_SERVINGS}인분보다 ${Math.abs(boilDeltaMin)}분 ${boilDeltaMin > 0 ? '더' : '덜'} 끓여요</div>`
+        : '';
+      return `
+        <div class="step-item">
+          <div class="step-num">${i + 1}</div>
+          <div style="flex:1;">
+            <div class="step-text">${text}</div>
+            ${timerSec ? `<button class="timer-chip" data-sec="${timerSec}">⏱ ${formatClock(timerSec)} 시작</button>` : ''}
+            ${boilNote}
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    const bogeuriLine = recipeServings === BASE_SERVINGS
+      ? '보글보글, 오늘 레시피는 이거예요!'
+      : recipeServings > BASE_SERVINGS
+        ? `${recipeServings}인분이면 냄비가 좀 더 커야겠어요!`
+        : `${recipeServings}인분, 단출하고 좋네요!`;
+
+    recipeBodyContent.innerHTML = `
+      <div class="recipe-mascot-row">
+        ${RECIPE_MASCOT_SVG}
+        <span class="bubble">${bogeuriLine}</span>
+      </div>
+      <div class="recipe-meta">
+        <span>⏱${recipe.time}분</span>
+        <span>난이도 ${recipe.difficulty}</span>
+        <span class="num">${recipe.kcal} kcal/1인분</span>
+      </div>
+      <div class="recipe-cost">${costLabel(recipe.costKrw)}</div>
+
+      <div class="servings-control">
+        <button class="stepper-btn" id="serv-minus" ${recipeServings <= 1 ? 'disabled' : ''} aria-label="인분 줄이기">−</button>
+        <span class="servings-value">${recipeServings}인분</span>
+        <button class="stepper-btn" id="serv-plus" ${recipeServings >= 6 ? 'disabled' : ''} aria-label="인분 늘리기">+</button>
+      </div>
+      <div class="scale-note">ⓘ 양념·국물은 인원수에 정비례하지 않게 조절했어요. 재료군마다 늘어나는 비율이 달라요.</div>
+
+      ${ingredientsHtml}
+
+      <h3 class="h2 steps-title" style="font-size:14px;">조리 순서</h3>
+      ${stepsHtml}
+    `;
+
+    recipeBodyContent.querySelector('#serv-minus')?.addEventListener('click', () => { recipeServings = Math.max(1, recipeServings - 1); renderRecipe(); });
+    recipeBodyContent.querySelector('#serv-plus')?.addEventListener('click', () => { recipeServings = Math.min(6, recipeServings + 1); renderRecipe(); });
+
+    recipeBodyContent.querySelectorAll('.timer-chip').forEach((chip) => {
+      chip.addEventListener('click', () => toggleTimer(chip));
+    });
+  }
+
+  function formatClock(totalSec) {
+    const m = Math.floor(totalSec / 60);
+    const s = totalSec % 60;
+    return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+  }
+
+  function toggleTimer(chip) {
+    if (chip.dataset.running === 'true') {
+      clearInterval(timerInterval);
+      chip.dataset.running = 'false';
+      chip.classList.remove('is-running');
+      chip.textContent = `⏱ ${formatClock(Number(chip.dataset.sec))} 시작`;
+      return;
+    }
+    document.querySelectorAll('.timer-chip.is-running').forEach((other) => toggleTimer(other));
+
+    let remaining = Number(chip.dataset.sec);
+    chip.dataset.running = 'true';
+    chip.classList.add('is-running');
+    chip.textContent = `⏸ ${formatClock(remaining)}`;
+    timerInterval = setInterval(() => {
+      remaining -= 1;
+      if (remaining <= 0) {
+        clearInterval(timerInterval);
+        chip.dataset.running = 'false';
+        chip.classList.remove('is-running');
+        chip.textContent = '⏰ 완료!';
+        return;
+      }
+      chip.textContent = `⏸ ${formatClock(remaining)}`;
+    }, 1000);
+  }
+
+  function openRecipe(mealType) {
+    recipeMealType = mealType;
+    recipeServings = BASE_SERVINGS;
+    renderRecipe();
+    recipeScreen.classList.add('is-open');
+  }
+
+  function closeRecipe() {
+    clearInterval(timerInterval);
+    recipeScreen.classList.remove('is-open');
+  }
+
+  document.getElementById('card-breakfast').addEventListener('click', () => openRecipe('breakfast'));
+  document.getElementById('card-dinner').addEventListener('click', () => openRecipe('dinner'));
+  document.querySelectorAll('.meal-card').forEach((card) => {
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.click(); }
+    });
+  });
+  document.getElementById('recipe-back').addEventListener('click', closeRecipe);
+</script>
+</body>
+</html>
