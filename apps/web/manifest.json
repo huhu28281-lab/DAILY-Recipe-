@@ -1,0 +1,15 @@
+{
+  "name": "Daily Recipe",
+  "short_name": "Daily Recipe",
+  "description": "오늘 뭐 먹지 고민을 대신 해주는 주간 식단 앱",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F9FAF8",
+  "theme_color": "#2D6A4F",
+  "lang": "ko",
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
