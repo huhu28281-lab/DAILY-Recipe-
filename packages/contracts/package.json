@@ -1,0 +1,10 @@
+{
+  "name": "@meal-planner/contracts",
+  "private": true,
+  "version": "1.2.0",
+  "description": "명세 §7 weekly_plan 데이터 계약 (JSON Schema + 픽스처). 앱과 API가 공통으로 참조하는 진실의 원천.",
+  "files": [
+    "schema",
+    "fixtures"
+  ]
+}

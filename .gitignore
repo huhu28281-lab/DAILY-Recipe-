@@ -1,0 +1,29 @@
+# --- Node / Cloudflare Workers (apps/api) ---
+node_modules/
+dist/
+.wrangler/
+.dev.vars
+*.tsbuildinfo
+npm-debug.log*
+
+# --- Flutter / Dart (apps/mobile) ---
+apps/mobile/.dart_tool/
+apps/mobile/.flutter-plugins
+apps/mobile/.flutter-plugins-dependencies
+apps/mobile/.packages
+apps/mobile/build/
+apps/mobile/.pub-cache/
+apps/mobile/.pub/
+apps/mobile/android/.gradle/
+apps/mobile/android/local.properties
+apps/mobile/ios/Pods/
+apps/mobile/ios/.symlinks/
+apps/mobile/ios/Flutter/Flutter.podspec
+apps/mobile/*.iml
+apps/mobile/.metadata
+
+# --- Editors / OS ---
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

@@ -1,0 +1,31 @@
+{
+  "name": "@meal-planner/api",
+  "private": true,
+  "version": "1.2.0",
+  "description": "Smart Meal Planner backend — Cloudflare Workers (generation pipeline, validation guards, pricing/nutrition DB)",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "build": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "db:migrate:local": "wrangler d1 migrations apply smart-meal-planner-db --local",
+    "db:migrate:remote": "wrangler d1 migrations apply smart-meal-planner-db --remote",
+    "db:seed:allergens:local": "wrangler d1 execute smart-meal-planner-db --local --file=./src/db/seed/001_allergen_master.sql",
+    "db:seed:allergens:remote": "wrangler d1 execute smart-meal-planner-db --remote --file=./src/db/seed/001_allergen_master.sql",
+    "db:seed:dev30:local": "wrangler d1 execute smart-meal-planner-db --local --file=./src/db/seed/002_dev_ingredients_30.sql",
+    "db:seed:local": "npm run db:migrate:local && npm run db:seed:allergens:local && npm run db:seed:dev30:local",
+    "typegen": "wrangler types"
+  },
+  "dependencies": {
+    "hono": "^4.6.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250101.0",
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0",
+    "wrangler": "^3.90.0"
+  }
+}

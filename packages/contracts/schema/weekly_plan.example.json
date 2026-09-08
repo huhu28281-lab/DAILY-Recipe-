@@ -1,0 +1,113 @@
+{
+  "plan_id": "weekly_plan_2026_w37_user01",
+  "schema_version": "1.2.0",
+  "week_start_date": "2026-09-07",
+
+  "_comment_kcal_suffix": "§2.1: kcal 필드는 모두 _per_person 또는 _household 접미사를 갖는다. §7 원문의 _per_member/무접미사 표기를 이 정본에서 정규화했다 (§2가 다른 장과 충돌 시 우선).",
+
+  "household_info": {
+    "members": [
+      { "member_id": "m_01", "label": "아빠", "role": "adult_male",
+        "activity_level": "moderate",
+        "daily_target_kcal_per_person": 2400,
+        "meal_target_kcal_per_person": { "breakfast_kcal_per_person": 600, "dinner_kcal_per_person": 840 },
+        "allergens": [], "diet_profile": "standard" },
+      { "member_id": "m_02", "label": "엄마", "role": "adult_female",
+        "activity_level": "light",
+        "daily_target_kcal_per_person": 1900,
+        "meal_target_kcal_per_person": { "breakfast_kcal_per_person": 475, "dinner_kcal_per_person": 665 },
+        "allergens": ["milk"], "diet_profile": "weight_loss" }
+    ],
+    "daily_target_kcal_household": 7000,
+    "managed_target_kcal_household": {
+      "breakfast_kcal_household": 1750, "dinner_kcal_household": 2450, "total_kcal_household": 4200
+    },
+    "household_allergens_union": ["milk", "walnut"],
+    "nutrition_target_ratio": { "carb": 0.58, "protein": 0.18, "fat": 0.24 }
+  },
+
+  "pantry_status": {
+    "owned_ingredients": [
+      { "ingredient_id": "ING_0101", "name": "계란", "category": "protein",
+        "quantity": 10, "unit": "ea", "expiry_date": "2026-09-14",
+        "is_priority": false, "is_staple": false },
+      { "ingredient_id": "ING_0207", "name": "두부", "category": "protein",
+        "quantity": 1, "unit": "block", "expiry_date": "2026-09-10",
+        "is_priority": true, "is_staple": false },
+      { "ingredient_id": "ING_0512", "name": "다진마늘", "category": "seasoning",
+        "quantity": 200, "unit": "g", "expiry_date": null,
+        "is_priority": false, "is_staple": true }
+    ],
+    "wishlist_ingredients": [{ "ingredient_id": "ING_0402", "name": "소고기 국거리" }],
+    "recommended_seasonal": [
+      { "ingredient_id": "ING_0322", "name": "표고버섯", "reason_nutrient": "vitamin_d" }
+    ]
+  },
+
+  "weekly_meals": [
+    {
+      "day_of_week": "Monday",
+      "date": "2026-09-07",
+      "dinner": {
+        "meal_slot_id": "mon_dinner",
+        "menu_name": "소고기 뭇국 & 삼겹살 구이",
+        "cook_time_min": 35,
+        "difficulty": "중",
+        "calories_per_person": 740,
+        "calories_household": 2220,
+        "meal_coverage_rate": 0.83,
+        "meal_extra_cost_krw": 9800,
+        "meal_total_cost_krw": 21400,
+        "has_unpriced_ingredient": false,
+        "ingredients": [
+          { "ingredient_id": "ING_0418", "name": "냉동 삼겹살",
+            "amount": 300, "unit": "g", "source": "pantry" },
+          { "ingredient_id": "ING_0402", "name": "소고기 국거리",
+            "amount": 400, "unit": "g", "source": "purchase",
+            "unit_price_krw": 35, "extra_cost_krw": 14000 }
+        ]
+      }
+    }
+  ],
+
+  "pantry_ledger": [
+    { "ingredient_id": "ING_0207", "initial_quantity": 1, "unit": "block",
+      "consumption": [
+        { "meal_slot_id": "mon_dinner", "amount": 0.5, "remaining": 0.5 },
+        { "meal_slot_id": "wed_breakfast", "amount": 0.5, "remaining": 0.0 }
+      ],
+      "final_remaining": 0.0, "fully_consumed_before_expiry": true }
+  ],
+
+  "grocery_list": [
+    { "ingredient_id": "ING_0402", "name": "소고기 국거리",
+      "required_quantity": 400, "unit": "g",
+      "package_quantity": 600, "package_price_krw": 21000,
+      "price_source": "KAMIS", "price_reference_date": "2026-09-06" },
+    { "ingredient_id": "ING_0801", "name": "참깨",
+      "required_quantity": 50, "unit": "g",
+      "package_quantity": null, "package_price_krw": null,
+      "price_source": "unavailable", "price_reference_date": null }
+  ],
+
+  "cost_summary": {
+    "grocery_total_cost_krw": 39700,
+    "meal_extra_cost_sum_krw": 34200,
+    "pantry_value_krw": 45000,
+    "priced_item_count": 7,
+    "unpriced_item_count": 1,
+    "price_reference_date": "2026-09-06"
+  },
+
+  "metrics": {
+    "pantry_coverage_rate": 0.68,
+    "expiry_priority_rate": 1.0,
+    "weekly_nutrition_ratio": { "carb": 0.57, "protein": 0.19, "fat": 0.24 }
+  },
+
+  "validation": {
+    "allergen_guard": "passed", "cook_time_guard": "passed",
+    "diversity_guard": "passed", "inventory_guard": "passed",
+    "regeneration_count": 1
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "name": "smart-meal-planner",
+  "private": true,
+  "version": "1.2.0",
+  "description": "Smart Meal Planner monorepo — Flutter app (apps/mobile) + Cloudflare Workers API (apps/api)",
+  "workspaces": [
+    "apps/api",
+    "packages/*"
+  ],
+  "scripts": {
+    "api:dev": "npm run dev --workspace=apps/api",
+    "api:deploy": "npm run deploy --workspace=apps/api",
+    "api:test": "npm run test --workspace=apps/api"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

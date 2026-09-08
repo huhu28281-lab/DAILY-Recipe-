@@ -1,0 +1,14 @@
+{
+  "_comment": "명세 §2.1 참조 케이스(3인 가구). 칼로리 배분 로직(아침 25% / 저녁 35%) 테스트 픽스처로 사용. kcal 필드는 모두 _per_person/_household 접미사를 갖는다.",
+  "members": [
+    { "role": "adult_male", "daily_target_kcal_per_person": 2400, "breakfast_kcal_per_person": 600, "dinner_kcal_per_person": 840 },
+    { "role": "adult_female", "daily_target_kcal_per_person": 1900, "breakfast_kcal_per_person": 475, "dinner_kcal_per_person": 665 },
+    { "role": "teen_male", "daily_target_kcal_per_person": 2700, "breakfast_kcal_per_person": 675, "dinner_kcal_per_person": 945 }
+  ],
+  "household_totals": {
+    "daily_target_kcal_household": 7000,
+    "breakfast_kcal_household": 1750,
+    "dinner_kcal_household": 2450,
+    "total_kcal_household": 4200
+  }
+}
